@@ -1,0 +1,90 @@
+<br />
+<!-- Profiles -->
+<!-- Google Profile -->
+<div class="panel panel-default profile-area" ng-if="tProfile=='google'">
+  <div class="panel-heading center-align">
+    <h5>
+      <i class="material-icons">person</i>
+      <span class="nickname">{{ vm.profile.nickname }}</span>
+    </h5>
+    <img ng-src="{{ vm.profile.picture }}" class="circle" alt="avatar">
+  </div>
+  <div class="panel-body">
+    <table rules="all" cellpadding="5" class="bordered">
+      <tr class="#42a5f5 card-panel blue lighten-1 z-depth-0">
+        <td class="center-align white-text centered">Group member</td>
+        <td class="center-align white-text centered">{{ vm.profile.name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Name</td>
+        <td>{{ vm.profile.given_name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Surname</td>
+        <td>{{ vm.profile.family_name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Gender</td>
+        <td class="gender">{{ vm.profile.gender }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<!-- Twitter Profile -->
+<div class="panel panel-default profile-area" ng-if="tProfile=='twitter'">
+  <div class="panel-heading center-align">
+    <h6>
+      <i class="material-icons">person</i>
+      <span class="nickname">{{ vm.profile.nickname }}</span>
+    </h6>
+    <img ng-src="{{ vm.profile.picture.split('_')[0] }}_{{ vm.profile.picture.split('_')[1] }}_400x400.jpg" class="circle" alt="avatar">
+  </div>
+  <div class="panel-body">
+    <table rules="all" cellpadding="5" class="bordered">
+      <tr class="#42a5f5 card-panel blue lighten-1 z-depth-0">
+        <td class="center-align white-text centered">Group member</td>
+        <td class="center-align white-text centered">{{ vm.profile.name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Name</td>
+        <td>{{ vm.profile.name.split(' ')[0] }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Surname</td>
+        <td>{{ vm.profile.name.split(' ')[1] }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- Facebook Profile -->
+<div class="panel panel-default profile-area" ng-if="tProfile=='facebook'">
+  <div class="panel-heading center-align">
+    <h6>
+      <i class="material-icons">person</i>
+      <span class="nickname">{{ vm.profile.nickname }}</span>
+    </h6>
+    <img ng-src="{{ vm.profile.picture }}" class="circle" alt="avatar" width="200px">
+  </div>
+  <div class="panel-body">
+    <table rules="all" cellpadding="5" class="bordered">
+      <tr class="#42a5f5 card-panel blue lighten-1 z-depth-0">
+        <td class="center-align white-text centered">Group member</td>
+        <td class="center-align white-text centered">{{ vm.profile.name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Name</td>
+        <td>{{ vm.profile.given_name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Surname</td>
+        <td>{{ vm.profile.family_name }}</td>
+      </tr>
+      <tr class="#ffffff white z-index 0">
+        <td>Gender</td>
+        <td class="gender">{{ vm.profile.gender }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>

@@ -1,0 +1,68 @@
+<br />
+<h4>Render Edit</h4>
+<br />
+<!-- Error message -->
+<div class="row">
+    <div class="col s12 center-align">
+        <div ng-hide="!myValue" class="card-panel #f44336 red z-depth-0" ng-model="error">{{error}}</div>
+    </div>
+</div>
+<table class="striped">
+    <thead>
+        <tr class="#42a5f5 blue lighten-1 z-depth-0">
+            <td class="center-align white-text centered">View</td>
+            <td class="center-align white-text centered">Controller</td>
+            <td class="center-align white-text centered">Actions</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="white z-depth-0">
+            <td>
+                <input ng-model="view" disabled />
+            </td>
+            <td>
+                <input ng-model="ctrl" disabled />
+            </td>
+            <td></td>
+        </tr>
+        <tr class="white z-depth-0">
+            <td colspan="3">
+                <div class="row">
+                    <form ref='uploadForm' id='uploadForm' action='/uploadEditFiles' method='post' encType="multipart/form-data" target="hiddenFrame">
+                        <div class="file-field input-field col s5">
+                            <div class="btn btn-large waves-effect waves-light #9e9e9e grey">
+                                <i class="material-icons">attach_file</i>
+                                <input tooltipped type="file" name="view" id="viewFile" data-position="top" data-delay="50" data-tooltip="Attach a template.html!"
+                                />
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        <div class="file-field input-field col s5">
+                            <div class="btn btn-large waves-effect waves-light #9e9e9e grey">
+                                <i class="material-icons">attach_file</i>
+                                <input tooltipped type="file" name="ctrl" id="ctrlFile" data-position="top" data-delay="50" data-tooltip="Attach a controller.js!"
+                                />
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        <div class="col s1">
+                            <button tooltipped class="btn-floating btn-large waves-effect waves-light blue" type='submit' value='Upload!' ng-click="edit()"
+                                data-position="top" data-delay="50" data-tooltip="Upload!">
+                                <i class="material-icons">file_upload</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+<br />
+<br />
+<a ui-sref="renders">Back</a>

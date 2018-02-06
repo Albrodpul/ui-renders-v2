@@ -1,0 +1,27 @@
+{
+  "name": "public",
+  "homepage": "https://github.com/TFG1718-ARP/TFG1718-ARP",
+  "authors": [
+    "Alberto Jesus Rodriguez Pulido <albrodpul@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-auth0": "^2.0.0",
+    "angular-ui-router": "^1.0.11",
+    "angular": "^1.6.6",
+    "materialize": "^0.100.2",
+    "angular-route": "^1.6.6",
+    "angular-filter": "^0.5.17",
+    "angular-materialize": "^0.2.2",
+    "jquery": "^3.1.1"
+  }
+}

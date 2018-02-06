@@ -1,0 +1,35 @@
+<script type="text/javascript" src="../../js/dropdown.js"></script>
+
+<!--Navbar-->
+<nav>
+  <div class="nav-wrapper #90caf9 blue lighten-3">
+    <a ui-sref="home" class="brand-logo"><i class="material-icons left">cloud</i>AJRP1718</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>
+        <a class="btn-margin" ng-if="!vm.auth.isAuthenticated()" ng-click="vm.auth.login()">
+          Sign in
+      </a>
+      </li>
+      <li>
+        <a class="btn-margin dropdown-button" data-activates='dropdown' data-beloworigin="true" ng-if="vm.auth.isAuthenticated()">
+          <img ng-src="{{ vm.profile.picture }}" class="circle avatar" alt="avatar">
+      </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown' class='dropdown-content'>
+      <li>
+        <a ng-if="vm.auth.isAuthenticated()" ui-sref="profile">
+          <i class="material-icons left">perm_identity</i>Profile
+      </a>
+      </li>
+      <li>
+        <a ng-if="vm.auth.isAuthenticated()" ng-click="vm.auth.logout()">
+          <i class="material-icons left">exit_to_app</i>Log out
+      </a>
+      </li>
+  </ul>
+

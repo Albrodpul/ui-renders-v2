@@ -1,0 +1,21 @@
+.profile-area img {
+    max-width: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-area h6{
+    font-size:36px;
+  }
+  
+  .panel-body h5 {
+    margin-top: 0;
+  }
+  
+  .nickname{
+    font-size:36px;
+    text-transform: capitalize;
+  }
+  
+  .gender:first-letter {
+      text-transform: capitalize;
+  }

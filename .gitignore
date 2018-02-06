@@ -1,0 +1,7 @@
+node_modules
+*.ini
+nbproject/
+.idea/
+*.log
+*.logs
+.vscode/
