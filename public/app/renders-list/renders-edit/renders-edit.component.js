@@ -3,7 +3,7 @@
 angular
     .module("rendersEdit")
     .component("rendersEdit", {
-        templateUrl: 'app/renders/renders-edit/renders-edit.template.html',
+        templateUrl: 'app/renders-list/renders-edit/renders-edit.template.html',
         controller: ["$scope", "$http", "$state","$state", function ($scope, $http, $state) {
             console.log("Renders Edit Controller initialized");
 

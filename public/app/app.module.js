@@ -3,10 +3,10 @@
 angular.module('renderApp', [
     'auth0.auth0',
     'appFooter',
-    'renderList',
-    'renders',
+    'renderizer',
+    'rendersList',
     'rendersEdit',
-    'add',
+    'addRender',
     'ui.router',
     'ui.materialize',
     'ngRoute'

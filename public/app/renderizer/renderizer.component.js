@@ -1,15 +1,15 @@
 'use strict'
 
 angular
-      .module("renderList")
-      .component("renderList", {
-            templateUrl: 'app/render-list/render-list.template.html',
+      .module("renderizer")
+      .component("renderizer", {
+            templateUrl: 'app/renderizer/renderizer.template.html',
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
-                  console.log("Render List Controller initialized");
+                  console.log("Renderizer Controller initialized");
 
                   var host = window.location.host;
                   var http = window.location.protocol;
-                  var baseURL = "/api/v1/uis";
+                  var baseURL = "http://localhost:8080/api/v1/renders";
                   $state.go("uis");
                   (function () {
                         if (window.localStorage) {
@@ -25,35 +25,38 @@ angular
                   $scope.myValue = false;
                   $http.get(baseURL)
                         .then(function (response) {
-                              var modellist = [];
+                              var idlist = [];
                               for (var i = 0; i < response.data.length; i++) {
-                                    modellist.push(response.data[i].uid);
+                                    idlist.push(response.data[i].id);
                               }
-                              $scope.modellist = modellist;
+                              $scope.idlist = idlist;
                         })
 
-                  $scope.models = function (model) {
-                        if (!model) {
+                  $scope.ids = function (id) {
+                        if (!id) {
+                              delete $scope.model;
                               delete $scope.view;
                               delete $scope.ctrl;
                               $state.go("uis");
                         } else {
-                              $http.get(baseURL + "/" + model)
+                              $http.get(baseURL + "/" + id)
                                     .then(function (response) {
-                                          $scope.view = response.data[0].options[0].view;
-                                          $scope.ctrl = response.data[0].options[0].ctrl;
+                                          console.log(response.data[0]);
+                                          $scope.model = response.data[0].sampleModel;
+                                          $scope.view = response.data[0].view;
+                                          $scope.ctrl = response.data[0].ctrl;
                                     })
                         }
                   }
 
-                  $scope.checkState = function (model, view, ctrl) {
-                        if (!model && !view && !ctrl) {
+                  $scope.checkState = function (id, model, view, ctrl) {
+                        if (!id && !model && !view && !ctrl) {
                               $state.go("uis");
                         } else {
-                              $http.get(baseURL + "/" + model + "/" + view + "/" + ctrl)
+                              $http.get(baseURL + "/" + id)
                                     .then(function (response) {
                                           $scope.myValue = false;
-                                          $state.go("uis.render", { "model": model, "view": view, "ctrl": ctrl });
+                                          $state.go("renderizer.render", { "id": id, "model": model, "view": view, "ctrl": ctrl });
                                     }, function (err) {
                                           $scope.myValue = true;
                                           $scope.error = err.status + " " + err.statusText;

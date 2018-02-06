@@ -4,17 +4,19 @@
 <table class="striped">
     <thead>
         <tr class="#42a5f5 blue lighten-1 z-depth-0">
-            <th class="center-align white-text centered">Model</th>
+            <th class="center-align white-text centered">Render name</th>
+            <th class="center-align white-text centered">Sample Model</th>
             <th class="center-align white-text centered">View</th>
             <th class="center-align white-text centered">Controller</th>
             <th class="center-align white-text centered">Actions</th>
         </tr>
     </thead>
     <tbody>
-        <tr class="white z-depth-0" ng-repeat="ui in uis">
-            <td class="center">{{ui.uid}}</td>
-            <td class="center">{{ui.options[0].view}}</td>
-            <td class="center">{{ui.options[0].ctrl}}</td>
+        <tr class="white z-depth-0" ng-repeat="render in renders">
+            <td class="center">{{render.id}}</td>
+            <td class="center">{{render.sampleModel}}</td>
+            <td class="center">{{render.view}}</td>
+            <td class="center">{{render.ctrl}}</td>
             <td class="center">
                 <renders-delete></renders-delete>
                 <a class="btn-floating btn-large waves-effect waves-light purple" ui-sref="edit({model: ui.uid, view: ui.options[0].view, ctrl: ui.options[0].ctrl})">

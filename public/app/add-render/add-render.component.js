@@ -1,15 +1,15 @@
 'use strict'
 
 angular
-      .module("add")
-      .component("add", {
-            templateUrl: 'app/add/add.template.html',
+      .module("addRender")
+      .component("addRender", {
+            templateUrl: 'app/add-render/add-render.template.html',
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
-                  console.log("Add Controller initialized");
+                  console.log("Add Render Controller initialized");
 
-                  var baseURL = "/api/v1/uis";
+                  var baseURL = "/api/v1/renders";
 
-                  $scope.add = function () {
+                  /*$scope.add = function () {
                         console.log("Inserting data...");
                         var viewFile = (document.getElementById('viewFile')).files[0];
                         var ctrlFile = (document.getElementById('ctrlFile')).files[0];
@@ -62,7 +62,7 @@ angular
                               reader.readAsText(ctrlFile);
 
                         }
-                  };
+                  };*/
 
                   $scope.downloadView = function () {
                         var htmlContent = "<h5>Example Template</h5>\r\n";

@@ -3,7 +3,7 @@
 angular
       .module("rendersDelete")
       .component("rendersDelete", {
-            templateUrl: 'app/renders/renders-delete/renders-delete.template.html',
+            templateUrl: 'app/renders-list/renders-delete/renders-delete.template.html',
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
                   console.log("Renders Delete Controller initialized");
 

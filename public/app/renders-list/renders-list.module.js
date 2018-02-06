@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('renders',[
+angular.module('rendersList',[
     'rendersDelete',
     'rendersEdit'
     ]);
