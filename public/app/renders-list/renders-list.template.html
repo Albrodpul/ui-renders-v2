@@ -1,7 +1,9 @@
 <br />
 <h4>Model Elements</h4>
 <br />
-<table class="striped">
+<div class="row">
+    <div class="col s12">
+<table class="table highlight bordered">
     <thead>
         <tr class="#42a5f5 blue lighten-1 z-depth-0">
             <th class="center-align white-text centered">Render name</th>
@@ -14,9 +16,9 @@
     <tbody>
         <tr class="white z-depth-0" ng-repeat="render in renders">
             <td class="center">{{render.id}}</td>
-            <td class="center">{{render.sampleModel}}</td>
-            <td class="center">{{render.view}}</td>
-            <td class="center">{{render.ctrl}}</td>
+            <td class="center"><a ng-click="downloadModel(render.sampleModel)"><div style="width: 230px;word-wrap: break-word;">{{render.sampleModel}}</div></a></td>
+            <td class="center"><a ng-click="downloadView(render.view)"><div style="width: 230px;word-wrap: break-word;">{{render.view}}</div></a></td>
+            <td class="center"><a ng-click="downloadCtrl(render.ctrl)"><div style="width: 230px;word-wrap: break-word;">{{render.ctrl}}</div></a></td>
             <td class="center">
                 <renders-delete></renders-delete>
                 <a class="btn-floating btn-large waves-effect waves-light purple" ui-sref="edit({model: ui.uid, view: ui.options[0].view, ctrl: ui.options[0].ctrl})">
@@ -26,5 +28,7 @@
         </tr>
     </tbody>
 </table>
+    </div>
+</div>
 <br />
 <a ui-sref="home">Back</a>

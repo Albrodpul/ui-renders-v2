@@ -7,10 +7,12 @@ angular
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
                   console.log("Renders Delete Controller initialized");
 
-                  var baseURL = "/api/v1/uis";
+                  var hostname = window.location.hostname;
+                  var http = window.location.protocol;
+                  var baseURL = http + '//' + hostname + ':8080/api/v1/renders';
 
-                    $scope.delete = function(model,view,ctrl){
-                        $http.delete(baseURL+"/"+model+"/"+view+"/"+ctrl)
+                    $scope.delete = function(id){
+                        $http.delete(baseURL+"/"+id)
                             .then(function(response){
                                 $scope.$parent.getAll();
                             });
