@@ -4,9 +4,10 @@ angular
       .module("renderApp")
       .controller("test", function ($scope, $http) {
             console.log("Test Controller Initialized");
-            $scope.data="Hola"
-            $scope.change=function(){
-                  $scope.data="Adiós";
-            }
+            $http.get("http://localhost:8800/app/renders/test/test.json")
+                  .then(function (response) {
+                        $scope.model = response.data.data[0];
+                  });
+
 
       });

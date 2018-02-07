@@ -3,7 +3,7 @@
           "default": "http://localhost:8080/api/v1/renders/test"
      }],
     "data": [{
-          "test":"false",
-          "test2":"true"
+          "test":"Hola",
+          "test2":"Adiós"
     }]
   }

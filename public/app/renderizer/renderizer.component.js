@@ -21,7 +21,6 @@ angular
                         }
                   })();
 
-                  $scope.myValue = false;
                   $http.get(baseURL)
                         .then(function (response) {
                               var idlist = [];
