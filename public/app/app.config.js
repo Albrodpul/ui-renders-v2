@@ -28,10 +28,6 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         url: '/renders-list',
         component: 'rendersList'
       })
-      .state('edit', {
-        url: '/renders/:model/:view/:ctrl',
-        component: 'rendersEdit'
-      })
       .state('renderizer', {
         url: '/renderizer',
         component: 'renderizer'
@@ -47,10 +43,6 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
           const id = $stateParams.id;
           return 'app/renders/' + id + '/' + view + ".html";
         }
-      })
-      .state('add-render', {
-        url: '/add-render',
-        component: 'addRender'
       })
       .state('about', {
         url: '/about',

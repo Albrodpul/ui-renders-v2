@@ -5,8 +5,6 @@ angular.module('renderApp', [
     'appFooter',
     'renderizer',
     'rendersList',
-    'rendersEdit',
-    'addRender',
     'ui.router',
     'ui.materialize',
     'ngRoute'

@@ -1,8 +1,84 @@
 <br />
 <h4>Render elements</h4>
 <br />
+<h5>Add render</h5>
+<!-- Error message -->
+<div class="row" ng-if="error">
+    <div class="col s12 center-align">
+        <div class="card-panel #f44336 red z-depth-0">
+            <span class="back-text">{{error}}</span>
+        </div>
+    </div>
+</div>
+<!-- Success message -->
+<div class="row" ng-if="success">
+    <div class="col s12 center-align">
+        <div class="card-panel #4caf50 green z-depth-0">
+            <span class="back-text">{{success}}</span>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="col s12">
+    <form ref='uploadForm' id='uploadForm' action='/uploadFiles' method='post' encType="multipart/form-data" target="hiddenFrame">
+        <div class="input-field col s2" style="margin-top: 20px;">
+            <input type="text" id="name" ng-model="name">
+            <label for="name">Render name</label>
+        </div>
+        <div class="file-field input-field col s4">
+            <div class="btn waves-effect waves-light #9e9e9e grey" style="margin-left: 50px;">
+                Select Sample Model
+                <input tooltipped type="file" name="model" id="modelFile" data-position="top" data-delay="50" data-tooltip="Attach a .json file!"
+                />
+            </div>
+        </div>
+        <div class="file-field input-field col s3">
+            <div class="btn waves-effect waves-light #9e9e9e grey">
+                Select View
+                <input tooltipped type="file" name="view" id="viewFile" data-position="top" data-delay="50" data-tooltip="Attach a .ang file!"
+                />
+            </div>
+        </div>
+        <div class="file-field input-field col s3" style="margin-left: -20px;">
+            <div class="btn waves-effect waves-light #9e9e9e grey">
+                Select Ctrl
+                <input tooltipped type="file" name="ctrl" id="ctrlFile" data-position="top" data-delay="50" data-tooltip="Attach a .ctl file!"
+                />
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div class="col s3 offset-s10">
+            <button class="btn waves-effect waves-light blue" type='submit' value='Upload!' ng-click="add()" style="margin-left:-10px;">
+                Add Render
+            </button>
+        </div>
+    </form>
+</div>
+<br />
+<br />
+<div class="row">
+    <div class="col s4">
+        <button class="btn waves-effect waves-light #90caf9 blue lighten-3" ng-click="downloadExampleModel()" style="margin-left:10%">
+            Download example.json
+        </button>
+    </div>
+    <div class="col s4">
+        <button class="btn waves-effect waves-light #90caf9 blue lighten-3" ng-click="downloadExampleView()" style="margin-left:10%">
+            Download example.ang
+        </button>
+    </div>
+    <div class="col s4">
+        <button class="btn waves-effect waves-light #90caf9 blue lighten-3" ng-click="downloadExampleCtrl()" style="margin-left:10%">
+            Download example.ctl
+        </button>
+    </div>
+</div>
+<iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+<br />
+<br />
+<h5>Render list</h5>
+<br />
 <table class="table highlight bordered">
     <thead>
         <tr class="#42a5f5 blue lighten-1 z-depth-0">
@@ -16,19 +92,28 @@
     <tbody>
         <tr class="white z-depth-0" ng-repeat="render in renders">
             <td class="center">{{render.id}}</td>
-            <td class="center"><a ng-click="downloadModel(render.sampleModel)"><div style="width: 230px;word-wrap: break-word;">{{render.sampleModel}}</div></a></td>
-            <td class="center"><a ng-click="downloadView(render.view)"><div style="width: 230px;word-wrap: break-word;">{{render.view}}</div></a></td>
-            <td class="center"><a ng-click="downloadCtrl(render.ctrl)"><div style="width: 230px;word-wrap: break-word;">{{render.ctrl}}</div></a></td>
             <td class="center">
-                <renders-delete></renders-delete>
-                <a class="btn-floating btn-large waves-effect waves-light purple" ui-sref="edit({model: ui.uid, view: ui.options[0].view, ctrl: ui.options[0].ctrl})">
-                    <i class="material-icons">mode_edit</i>
+                <a ng-click="downloadModel(render.sampleModel)">
+                    <div style="width: 230px;word-wrap: break-word;">{{render.sampleModel}}</div>
                 </a>
+            </td>
+            <td class="center">
+                <a ng-click="downloadView(render.view)">
+                    <div style="width: 230px;word-wrap: break-word;">{{render.view}}</div>
+                </a>
+            </td>
+            <td class="center">
+                <a ng-click="downloadCtrl(render.ctrl)">
+                    <div style="width: 230px;word-wrap: break-word;">{{render.ctrl}}</div>
+                </a>
+            </td>
+            <td class="center">
+                <button class="btn-floating btn-large waves-effect waves-light #f44336 red" ng-click="delete(render.id)">
+                    <i class="material-icons">delete</i>
+                </button>
             </td>
         </tr>
     </tbody>
 </table>
-    </div>
-</div>
 <br />
 <a ui-sref="home">Back</a>
