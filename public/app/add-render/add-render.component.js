@@ -7,6 +7,9 @@ angular
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
                   console.log("Add Render Controller initialized");
 
+                  $scope.success = "";
+                  $scope.error = "";
+
                   var hostname = window.location.hostname;
                   var http = window.location.protocol;
                   var baseURL = http + '//' + hostname + ':8080/api/v1/renders';
@@ -18,34 +21,34 @@ angular
                         var viewFile = (document.getElementById('viewFile')).files[0];
                         var ctrlFile = (document.getElementById('ctrlFile')).files[0];
                         if (!name) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "Render name input must be fulfilled";
                         } else if (!modelFile) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "No sample model file attached";
                         } else if (!viewFile) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "No view file attached";
                         } else if (!ctrlFile) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "No controller file attached";
                         } else if (name != modelFile.name.split('.')[0]) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "Sample model file name must be " + name + ".json";
                         } else if (name != viewFile.name.split('.')[0]) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "View file name must be " + name + ".ang";
                         } else if (name != ctrlFile.name.split('.')[0]) {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "Controller file name must be " + name + ".ctl";
                         } else if (modelFile.name.split('.')[1] != "json") {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "Model file extension must be .json";
                         } else if (viewFile.name.split('.')[1] != "ang") {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "View file extension must be .ang";
                         } else if (ctrlFile.name.split('.')[1] != "ctl") {
-                              $scope.myValue = true;
+                              $scope.success = "";
                               $scope.error = "Controller file extension .ctl";
                         } else {
                               var folderUrl = http + '//' + hostname + ':8800/app/renders/' + name;
@@ -56,11 +59,11 @@ angular
                                     let text = reader.result;
                                     var lines = text.split("\n").toString();
                                     if (!lines.includes('"renders":')) {
-                                          $scope.myValue = true;
+                                          $scope.success = "";
                                           $scope.error = modelFile.name + 'must include "renders":. Download and look example.json';
                                           $scope.$apply();
                                     } else if (!lines.includes('"default": "' + url + '"')) {
-                                          $scope.myValue = true;
+                                          $scope.success = "";
                                           $scope.error = modelFile.name + 'must include "default": "' + url + '". Download and look example.json';
                                           $scope.$apply();
                                     } else {
@@ -69,27 +72,26 @@ angular
                                                 let text = reader.result;
                                                 var lines = text.split("\n").toString();
                                                 if (!lines.includes(".module('renderApp')")) {
-                                                      $scope.myValue = true;
+                                                      $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include .module('renderApp'). Download and look example.ctl";
                                                       $scope.$apply();
                                                 } else if (!lines.includes(".controller('" + name + "',")) {
-                                                      $scope.myValue = true;
+                                                      $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
                                                       $scope.$apply();
                                                 } else {
                                                       $http
                                                             .post(baseURL, data)
                                                             .then(function (response) {
-                                                                  $scope.myValue = false;
-                                                                  $state.go("renderizer");
+                                                                  $scope.success = "Render successfully added";
+                                                                  $scope.error = "";
                                                             }, function (err) {
                                                                   if (err.status != 201) {
-                                                                        $scope.myValue = true;
+                                                                        $scope.success = "";
                                                                         $scope.error = "This render already exists";
                                                                   }
                                                             });
                                                 }
-
                                           };
                                           reader.readAsText(ctrlFile);
                                     }

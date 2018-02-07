@@ -8,6 +8,7 @@ var app = express();
 var cors = require("cors");
 var port = (process.env.PORT || 8800);
 var routes = require("./src/routes.js");
+const fileUpload = require('express-fileupload');
 
 app.use(cors()); // allow Cross-Origin Resource Sharing 
 app.use(bodyParser.json()); //use default json enconding/decoding
@@ -16,6 +17,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(helmet()); //improve security
+app.use(fileUpload());
 
 // For all GET requests, send back index.html
 app.use("/", routes);

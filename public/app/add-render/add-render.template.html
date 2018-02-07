@@ -4,14 +4,24 @@
 <br/>
 <h4>Add render</h4>
 <!-- Error message -->
-<div class="row">
+<div class="row" ng-if="error">
     <div class="col s12 center-align">
-        <div ng-hide="!myValue" class="card-panel #f44336 red z-depth-0" ng-model="error">{{error}}</div>
+        <div class="card-panel #f44336 red z-depth-0">
+            <span class="back-text">{{error}}</span>
+        </div>
     </div>
 </div>
-
+<!-- Success message -->
+<div class="row" ng-if="success">
+    <div class="col s12 center-align">
+        <div class="card-panel #4caf50 green z-depth-0">
+            <span class="back-text">{{success}}</span>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <form ref='uploadForm' id='uploadForm' action='/uploadFiles' method='post' encType="multipart/form-data" target="hiddenFrame">
+    <form ref='uploadForm' id='uploadForm' action='/uploadFiles' method='post' encType="multipart/form-data"
+        target="hiddenFrame">
         <div class="input-field col s2" style="margin-top: 20px;">
             <input type="text" id="name" ng-model="name">
             <label for="name">Render name</label>
