@@ -43,7 +43,7 @@ angular
                               delete $scope.model;
                               delete $scope.view;
                               delete $scope.ctrl;
-                              $state.go("uis");
+                              $state.go("renderizer");
                         } else {
                               $http.get(apiURL + "/" + id)
                                     .then(function (response) {
@@ -56,21 +56,17 @@ angular
 
                   $scope.checkState = function (id, model, view, ctrl) {
                         if (!id && !model && !view && !ctrl) {
-                              $state.go("uis");
+                              $state.go("renderizer");
                         } else {
                               $http.get(apiURL + "/" + id)
                                     .then(function (response) {
-                                          $scope.myValue = false;
+                                          $scope.error = "";
                                           $state.go("renderizer.render", {
-                                                "id": id,
-                                                "model": model,
-                                                "view": view,
-                                                "ctrl": ctrl
+                                                "model": model
                                           });
                                     }, function (err) {
-                                          $scope.myValue = true;
-                                          $scope.error = err.status + " " + err.statusText;
-                                          $state.go("uis");
+                                          $scope.error = "Render not found";
+                                          $state.go("renderizer");
                                     });
                         }
                   }

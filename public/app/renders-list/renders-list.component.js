@@ -5,7 +5,7 @@ angular
       .component("rendersList", {
             templateUrl: 'app/renders-list/renders-list.template.html',
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
-                  console.log("Renders Controller initialized");
+                  console.log("Render List Controller initialized");
 
                   var apiURL;
                   var uiURL;

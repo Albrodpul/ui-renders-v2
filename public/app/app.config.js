@@ -33,14 +33,14 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         component: 'renderizer'
       })
       .state('renderizer.render', {
-        url: '/:id/:model/:view/:ctrl',
+        url: '/:model',
         controllerProvider: function ($stateParams) {
-          const ctrl = ($stateParams.ctrl.split('/')[6]).split('.')[0];
+          const ctrl = ($stateParams.model.split('/')[6]).split('.')[0];
           return ctrl;
         },
         templateUrl: function ($stateParams) {
-          const view = ($stateParams.view.split('/')[6]).split('.')[0];
-          const id = $stateParams.id;
+          const view = ($stateParams.model.split('/')[6]).split('.')[0];
+          const id = view;
           return 'app/renders/' + id + '/' + view + ".html";
         }
       })
