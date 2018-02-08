@@ -14,7 +14,7 @@ angular
                         apiURL = 'http://localhost:8080/api/v1/renders';
                         uiURL = 'http://localhost:8800/app/renders';
                   } else {
-                        apiURL = "https://api-renders.herokuapp.com:50361/api/v1/renders";
+                        apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
                         uiURL = "https://ui-renders.herokuapp.com:50361/app/renders";
                   }
                   var deleteURL = '/deleteFiles';
