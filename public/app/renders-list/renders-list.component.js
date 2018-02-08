@@ -7,21 +7,28 @@ angular
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
                   console.log("Renders Controller initialized");
 
+                  var apiURL;
+                  var uiURL;
                   var hostname = window.location.hostname;
-                  var http = window.location.protocol;
-                  var baseURL = http + '//' + hostname + ':8080/api/v1/renders';
-                  var deleteUrl = '/deleteFiles';
+                  if (hostname == "localhost") {
+                        apiURL = 'http://localhost:8080/api/v1/renders';
+                        uiURL = 'http://localhost:8800/app/renders';
+                  } else {
+                        apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
+                        uiURL = "https://ui-renders.herokuapp.com/app/renders";
+                  }
+                  var deleteURL = '/deleteFiles';
 
-                  var refresh = function(){
-                      $http.get(baseURL)
-                        .then(function(response){
-                            $scope.renders=response.data;
-                        });
+                  var refresh = function () {
+                        $http.get(apiURL)
+                              .then(function (response) {
+                                    $scope.renders = response.data;
+                              });
                   }
 
                   refresh();
 
-                  $scope.getAll = function(){
+                  $scope.getAll = function () {
                         refresh();
                   }
 
@@ -62,9 +69,9 @@ angular
                               $scope.success = "";
                               $scope.error = "Controller file extension .ctl";
                         } else {
-                              var folderUrl = http + '//' + hostname + ':8800/app/renders/' + name;
+                              var folderUrl = uiURL + '/' + name;
                               var data = '{"id":"' + name + '", "sampleModel":"' + folderUrl + "/" + modelFile.name + '","view":"' + folderUrl + "/" + viewFile.name + '","ctrl":"' + folderUrl + "/" + ctrlFile.name + '","type":"ng"}';
-                              var url = http + '//' + hostname + ':8080/api/v1/renders/' + name;
+                              var url = uiURL + '/' + name;
                               const reader = new FileReader();
                               reader.onload = () => {
                                     let text = reader.result;
@@ -92,7 +99,7 @@ angular
                                                       $scope.$apply();
                                                 } else {
                                                       $http
-                                                            .post(baseURL, data)
+                                                            .post(apiURL, data)
                                                             .then(function (response) {
                                                                   $scope.success = "Render successfully added";
                                                                   $scope.error = "";
@@ -113,14 +120,14 @@ angular
                   };
 
                   $scope.downloadExampleModel = function () {
-                        var url = http + '//' + hostname + ':8080/api/v1/renders/example';
+                        var url = apiURL + '/example';
                         var jsonContent = '{ \r\n';
                         jsonContent += '  "renders": [{\r\n';
                         jsonContent += '        "default": "' + url + '"\r\n';
                         jsonContent += '   }],\r\n';
                         jsonContent += '  "data": [{\r\n';
-                        jsonContent += '        "example":"false",\r\n';
-                        jsonContent += '        "example2":"true"\r\n';
+                        jsonContent += '        "example":"Example working!",\r\n';
+                        jsonContent += '        "example2":"Example is working perfectly!"\r\n';
                         jsonContent += '  }]\r\n';
                         jsonContent += '}';
                         var blob = new Blob([jsonContent], {
@@ -146,9 +153,7 @@ angular
                   $scope.downloadExampleView = function () {
                         var htmlContent = "<h5>Example Template</h5>\r\n";
                         htmlContent += "<br />\r\n";
-                        htmlContent += "{{example}}\r\n";
-                        htmlContent += "<br />\r\n";
-                        htmlContent += "<button class='btn' ng-click='change()'>Change</button>";
+                        htmlContent += "{{model.example}}";
                         var blob = new Blob([htmlContent], {
                               type: 'text/html;charset=UTF-8;'
                         });
@@ -176,10 +181,10 @@ angular
                         jsContent += ".module('renderApp')\r\n";
                         jsContent += "      .controller('example', function ($scope, $http) {\r\n";
                         jsContent += "            console.log('Example Controller Initialized');\r\n";
-                        jsContent += "            $scope.example='This is an example';\r\n";
-                        jsContent += "            $scope.change=function(){\r\n";
-                        jsContent += "                  $scope.example='Example Controller is working perfectly!';\r\n";
-                        jsContent += "            }\r\n";
+                        jsContent += "            $http.get('" + uiURL + "/example/example.json';\r\n";
+                        jsContent += "                .then(function(response){\r\n";
+                        jsContent += "                      $scope.model = response.data.data[0];';\r\n";
+                        jsContent += "            });\r\n";
                         jsContent += "\r\n";
                         jsContent += "      });";
                         var blob = new Blob([jsContent], {
@@ -200,7 +205,7 @@ angular
                                     document.body.removeChild(link);
                               }
                         }
-                  }                  
+                  }
 
                   $scope.downloadModel = function (model) {
                         var modelUrl = "app/renders/" + (model.split('/')[6]).split('.')[0] + "/" + (model.split('/')[6]).split('.')[0] + ".json";
@@ -212,7 +217,7 @@ angular
                         }).then(function (response) {
                               saveAs(response.data, modelDownload);
                         });
-                  }                  
+                  }
 
                   $scope.downloadCtrl = function (ctrl) {
                         var ctrlUrl = "app/renders/" + (ctrl.split('/')[6]).split('.')[0] + "/" + (ctrl.split('/')[6]).split('.')[0] + ".js";
@@ -236,19 +241,19 @@ angular
                         }).then(function (response) {
                               saveAs(response.data, viewDownload);
                         });
-                  } 
+                  }
 
                   $scope.delete = function (id) {
                         console.log("Click");
-                        $http.delete(baseURL + "/" + id)
-                            .then(function (response) {
-                                console.log("OK");
-                                $http.delete(deleteUrl + "/" + id)
-                                    .then(function (response) {
-                                        $state.reload();
-                                    });
-                            });
-                    }                  
+                        $http.delete(apiURL + "/" + id)
+                              .then(function (response) {
+                                    console.log("OK");
+                                    $http.delete(deleteURL + "/" + id)
+                                          .then(function (response) {
+                                                $state.reload();
+                                          });
+                              });
+                  }
 
             }]
-        });
+      });

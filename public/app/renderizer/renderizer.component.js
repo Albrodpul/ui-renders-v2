@@ -7,9 +7,17 @@ angular
             controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
                   console.log("Renderizer Controller initialized");
 
+                  var apiURL;
+                  var uiURL;
                   var hostname = window.location.hostname;
-                  var http = window.location.protocol;
-                  var baseURL = http + '//' + hostname + ':8080/api/v1/renders';
+                  if (hostname == "localhost") {
+                        apiURL = 'http://localhost:8080/api/v1/renders';
+                        uiURL = 'http://localhost:8800/app/renders';
+                  } else {
+                        apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
+                        uiURL = "https://ui-renders.herokuapp.com/app/renders";
+                  }
+
                   $state.go("renderizer");
                   (function () {
                         if (window.localStorage) {
@@ -21,7 +29,7 @@ angular
                         }
                   })();
 
-                  $http.get(baseURL)
+                  $http.get(apiURL)
                         .then(function (response) {
                               var idlist = [];
                               for (var i = 0; i < response.data.length; i++) {
@@ -37,7 +45,7 @@ angular
                               delete $scope.ctrl;
                               $state.go("uis");
                         } else {
-                              $http.get(baseURL + "/" + id)
+                              $http.get(apiURL + "/" + id)
                                     .then(function (response) {
                                           $scope.model = response.data[0].sampleModel;
                                           $scope.view = response.data[0].view;
@@ -50,7 +58,7 @@ angular
                         if (!id && !model && !view && !ctrl) {
                               $state.go("uis");
                         } else {
-                              $http.get(baseURL + "/" + id)
+                              $http.get(apiURL + "/" + id)
                                     .then(function (response) {
                                           $scope.myValue = false;
                                           $state.go("renderizer.render", {
@@ -77,7 +85,7 @@ angular
                         }).then(function (response) {
                               saveAs(response.data, modelDownload);
                         });
-                  }                    
+                  }
 
                   $scope.downloadCtrl = function (ctrl) {
                         var ctrlUrl = "app/renders/" + (ctrl.split('/')[6]).split('.')[0] + "/" + (ctrl.split('/')[6]).split('.')[0] + ".js";
@@ -101,6 +109,6 @@ angular
                         }).then(function (response) {
                               saveAs(response.data, viewDownload);
                         });
-                  }                  
+                  }
             }]
       });
