@@ -6,6 +6,16 @@ const fileUpload = require('express-fileupload');
 
 module.exports = {
     postFiles: function (request, response, next) {
+        var apiURL;
+        var uiURL;
+        var hostname = request.get('host').split(':')[0];
+        if (hostname == "localhost") {
+            apiURL = 'http://localhost:8080/api/v1/renders';
+            uiURL = 'http://localhost:8800/app/renders';
+        } else {
+            apiURL = "https://api-renders.herokuapp.com:50361/api/v1/renders";
+            uiURL = "https://ui-renders.herokuapp.com:50361/app/renders";
+        }
         var model = request.files.model;
         if (!model) {
             console.log("WARNING: No model json uploaded")
@@ -37,10 +47,6 @@ module.exports = {
         var templatePath = './public/app/renders/' + id + '/' + view.name.split('.')[0] + '.html';
         var controllerPath = './public/app/renders/' + id + '/' + ctrl.name.split('.')[0] + '.js';
         var indexPath = './public/index.html';
-        var http = request.protocol;
-        var hostname = request.get('host').split(':')[0];
-        var port = process.env.PORT || 8080;
-        var url = http + '://' + hostname + ':' + port + '/api/v1/renders/' + id;
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
         if (fs.existsSync(dirPath)) {
@@ -51,8 +57,8 @@ module.exports = {
             console.log('WARNING: Model must include "renders":');
             return response.status(400);
         }
-        if (!modelLines.includes('"default": "' + url + '"')) {
-            console.log('WARNING: Model must include "default": "' + url + '"');
+        if (!modelLines.includes('"default": "' + apiURL + '/' + id + '"')) {
+            console.log('WARNING: Model must include "default": "' + apiURL + '/' + id + '"');
             return response.status(400);
         }
         if (!ctrlLines.includes(".module('renderApp')")) {
@@ -90,11 +96,11 @@ module.exports = {
     },
     deleteFiles: function (request, response, next) {
         var id = request.params.id;
-        console.log("Deleting folder "+id);
+        console.log("Deleting folder " + id);
         const dirPath = './public/app/renders/' + id;
         var indexPath = './public/index.html';
         fsextra.remove(dirPath);
-        shell.sed('-i', '<script type="text/javascript" src="app/renders/' + id + '/' + id + '.js"></script>', '', indexPath);    
+        shell.sed('-i', '<script type="text/javascript" src="app/renders/' + id + '/' + id + '.js"></script>', '', indexPath);
         response.sendStatus(200);
         response.end();
     }
