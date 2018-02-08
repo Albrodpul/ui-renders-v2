@@ -69,20 +69,20 @@ angular
                               $scope.success = "";
                               $scope.error = "Controller file extension .ctl";
                         } else {
-                              var folderUrl = uiURL + '/' + name;
-                              var data = '{"id":"' + name + '", "sampleModel":"' + folderUrl + "/" + modelFile.name + '","view":"' + folderUrl + "/" + viewFile.name + '","ctrl":"' + folderUrl + "/" + ctrlFile.name + '","type":"ng"}';
-                              var url = uiURL + '/' + name;
+                              var folderURL = uiURL + '/' + name;
+                              var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"ng"}';
+                              var dbURL = apiURL + '/' + name;
                               const reader = new FileReader();
                               reader.onload = () => {
                                     let text = reader.result;
                                     var lines = text.split("\n").toString();
                                     if (!lines.includes('"renders":')) {
                                           $scope.success = "";
-                                          $scope.error = modelFile.name + 'must include "renders":. Download and look example.json';
+                                          $scope.error = modelFile.name + ' must include "renders":. Download and look example.json';
                                           $scope.$apply();
-                                    } else if (!lines.includes('"default": "' + url + '"')) {
+                                    } else if (!lines.includes('"default": "' + dbURL + '"')) {
                                           $scope.success = "";
-                                          $scope.error = modelFile.name + 'must include "default": "' + url + '". Download and look example.json';
+                                          $scope.error = modelFile.name + ' must include "default": "' + dbURL + '". Download and look example.json';
                                           $scope.$apply();
                                     } else {
                                           const reader = new FileReader();
@@ -96,6 +96,11 @@ angular
                                                 } else if (!lines.includes(".controller('" + name + "',")) {
                                                       $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
+                                                      $scope.$apply();
+                                                } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") &&
+                                                      !lines.includes("$scope.model = response.data.data[0];")) {
+                                                      $scope.success = "";
+                                                      $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data.data[0];. Download and look example.ctl";
                                                       $scope.$apply();
                                                 } else {
                                                       $http
@@ -181,9 +186,9 @@ angular
                         jsContent += ".module('renderApp')\r\n";
                         jsContent += "      .controller('example', function ($scope, $http) {\r\n";
                         jsContent += "            console.log('Example Controller Initialized');\r\n";
-                        jsContent += "            $http.get('" + uiURL + "/example/example.json';\r\n";
+                        jsContent += "            $http.get('" + uiURL + "/example/example.json')\r\n";
                         jsContent += "                .then(function(response){\r\n";
-                        jsContent += "                      $scope.model = response.data.data[0];';\r\n";
+                        jsContent += "                      $scope.model = response.data.data[0];\r\n";
                         jsContent += "            });\r\n";
                         jsContent += "\r\n";
                         jsContent += "      });";
@@ -244,15 +249,17 @@ angular
                   }
 
                   $scope.delete = function (id) {
-                        console.log("Click");
-                        $http.delete(apiURL + "/" + id)
-                              .then(function (response) {
-                                    console.log("OK");
-                                    $http.delete(deleteURL + "/" + id)
-                                          .then(function (response) {
-                                                $state.reload();
-                                          });
-                              });
+                        var deleteId = window.confirm("¿Está seguro que desea borrar " + id + "?");
+                        if (deleteId) {
+                              $http.delete(apiURL + "/" + id)
+                                    .then(function (response) {
+                                          console.log("OK");
+                                          $http.delete(deleteURL + "/" + id)
+                                                .then(function (response) {
+                                                      $state.reload();
+                                                });
+                                    });
+                        }
                   }
 
             }]
