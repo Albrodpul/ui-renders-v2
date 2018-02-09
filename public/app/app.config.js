@@ -33,7 +33,7 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         component: 'renderizer'
       })
       .state('renderizer.render', {
-        url: '/:model',
+        url: '?model',
         controllerProvider: function ($stateParams) {
           const ctrl = ($stateParams.model.split('/')[6]).split('.')[0];
           return ctrl;

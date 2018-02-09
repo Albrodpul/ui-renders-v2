@@ -10,18 +10,10 @@
         </div>
     </div>
 </div>
-<!-- Success message -->
-<div class="row" ng-if="success">
-    <div class="col s12 center-align">
-        <div class="card-panel #4caf50 green z-depth-0">
-            <span class="back-text">{{success}}</span>
-        </div>
-    </div>
-</div>
 <div class="row">
     <form ref='uploadForm' id='uploadForm' action='/uploadFiles' method='post' encType="multipart/form-data" target="hiddenFrame">
         <div class="input-field col s2" style="margin-top: 20px;">
-            <input type="text" id="name" ng-model="name">
+            <input type="text" id="name" name="name" ng-model="name">
             <label for="name">Render name</label>
         </div>
         <div class="file-field input-field col s4">

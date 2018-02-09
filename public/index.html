@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="app/navbar/navbar.stylesheet.css">
   <script type="text/javascript" src="app/home/home.controller.js"></script>
   <script type="text/javascript" src="app/navbar/navbar.directive.js"></script>
-  <script type="text/javascript" src="app/footer/footer.module.js"></script>  
+  <script type="text/javascript" src="app/footer/footer.module.js"></script>
   <script type="text/javascript" src="app/footer/footer.component.js"></script>
   <link rel="stylesheet" href="app/profile/profile.stylesheet.css">
   <script type="text/javascript" src="app/profile/profile.controller.js"></script>
@@ -66,14 +66,36 @@
   <navbar></navbar>
   <ui-view ng-if="vm.auth.isAuthenticated()"></ui-view>
   <div ng-if="!vm.auth.isAuthenticated()">
-    <h6>You are not logged in! Please
-      <a ng-click="vm.auth.login()">Log In</a> to continue.
-    </h6>
-    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br />
+    <h4>Sign in to access to the service</h4>
+    <br />
+    <button class="waves-effect waves-light btn #90caf9 blue lighten-3" ng-click="vm.auth.login()">Log In</button>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
   </div>
   <app-footer></app-footer>
 </body>
 
 <script type="text/javascript" src="app/renders/test/test.js"></script>
 <script type="text/javascript" src="app/renders/test2/test2.js"></script>
+
+
+
+
 </html>

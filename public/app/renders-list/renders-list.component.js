@@ -39,34 +39,24 @@ angular
                         var viewFile = (document.getElementById('viewFile')).files[0];
                         var ctrlFile = (document.getElementById('ctrlFile')).files[0];
                         if (!name) {
-                              $scope.success = "";
                               $scope.error = "Render name input must be fulfilled";
                         } else if (!modelFile) {
-                              $scope.success = "";
                               $scope.error = "No sample model file attached";
                         } else if (!viewFile) {
-                              $scope.success = "";
                               $scope.error = "No view file attached";
                         } else if (!ctrlFile) {
-                              $scope.success = "";
                               $scope.error = "No controller file attached";
                         } else if (name != modelFile.name.split('.')[0]) {
-                              $scope.success = "";
                               $scope.error = "Sample model file name must be " + name + ".json";
                         } else if (name != viewFile.name.split('.')[0]) {
-                              $scope.success = "";
                               $scope.error = "View file name must be " + name + ".ang";
                         } else if (name != ctrlFile.name.split('.')[0]) {
-                              $scope.success = "";
                               $scope.error = "Controller file name must be " + name + ".ctl";
                         } else if (modelFile.name.split('.')[1] != "json") {
-                              $scope.success = "";
-                              $scope.error = "Model file extension must be .json";
+                              $scope.error = "Sample model file extension must be .json";
                         } else if (viewFile.name.split('.')[1] != "ang") {
-                              $scope.success = "";
                               $scope.error = "View file extension must be .ang";
                         } else if (ctrlFile.name.split('.')[1] != "ctl") {
-                              $scope.success = "";
                               $scope.error = "Controller file extension .ctl";
                         } else {
                               var folderURL = uiURL + '/' + name;
@@ -77,11 +67,9 @@ angular
                                     let text = reader.result;
                                     var lines = text.split("\n").toString();
                                     if (!lines.includes('"renders":')) {
-                                          $scope.success = "";
                                           $scope.error = modelFile.name + ' must include "renders":. Download and look example.json';
                                           $scope.$apply();
                                     } else if (!lines.includes('"default": "' + dbURL + '"')) {
-                                          $scope.success = "";
                                           $scope.error = modelFile.name + ' must include "default": "' + dbURL + '". Download and look example.json';
                                           $scope.$apply();
                                     } else {
@@ -90,29 +78,24 @@ angular
                                                 let text = reader.result;
                                                 var lines = text.split("\n").toString();
                                                 if (!lines.includes(".module('renderApp')")) {
-                                                      $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include .module('renderApp'). Download and look example.ctl";
                                                       $scope.$apply();
                                                 } else if (!lines.includes(".controller('" + name + "',")) {
-                                                      $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
                                                       $scope.$apply();
-                                                } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") &&
+                                                } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") ||
                                                       !lines.includes("$scope.model = response.data.data[0];")) {
-                                                      $scope.success = "";
                                                       $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data.data[0];. Download and look example.ctl";
                                                       $scope.$apply();
                                                 } else {
                                                       $http
                                                             .post(apiURL, data)
                                                             .then(function (response) {
-                                                                  $scope.success = "Render successfully added";
                                                                   $scope.error = "";
                                                                   $state.reload();
                                                             }, function (err) {
                                                                   if (err.status != 201) {
-                                                                        $scope.success = "";
-                                                                        $scope.error = "This render already exists";
+                                                                        $scope.error = "This render already exists. If you want to upload it again, you must delete it first";
                                                                   }
                                                             });
                                                 }

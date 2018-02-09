@@ -1,6 +1,6 @@
 { 
     "renders": [{
-          "default": "http://api-renders.herokuapp.com/api/v1/renders/test2"
+          "default": "https://api-renders.herokuapp.com/api/v1/renders/test2"
      }],
     "data": [{
           "test3":"false",
