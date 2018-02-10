@@ -5,6 +5,9 @@ module('renderApp').
 config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider',
   function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider) {
 
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+
     $stateProvider
       .state('home', {
         url: '/',
@@ -34,14 +37,29 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
       })
       .state('renderizer.render', {
         url: '?model',
-        controllerProvider: function ($stateParams) {
-          const ctrl = ($stateParams.model.split('/')[6]).split('.')[0];
+        resolve: {
+          apiUrl: ['$http', '$stateParams', function ($http, $stateParams) {
+            return $http({
+              method: 'GET',
+              url: $stateParams.model
+            });
+          }],
+          items: ['$http', 'apiUrl', function ($http, apiUrl) {
+            return $http({
+              method: 'GET',
+              url: apiUrl.data.renders[0].default
+            });
+          }]
+        },
+        controllerProvider: function (items) {
+          var ctrl = (items.data[0].ctrl.split('/')[6]).split('.')[0];
           return ctrl;
         },
-        templateUrl: function ($stateParams) {
-          const view = ($stateParams.model.split('/')[6]).split('.')[0];
-          const id = view;
-          return 'app/renders/' + id + '/' + view + ".html";
+        templateProvider: function ($templateRequest, items) {
+          const view = (items.data[0].view.split('/')[6]).split('.')[0];
+          const id = items.data[0].id;
+          var pathToTemplate = 'app/renders/' + id + '/' + view + ".html";
+          return $templateRequest(pathToTemplate);
         }
       })
       .state('about', {
