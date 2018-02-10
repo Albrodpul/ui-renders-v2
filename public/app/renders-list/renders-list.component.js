@@ -195,9 +195,9 @@ angular
                         }
                   }
 
-                  $scope.downloadModel = function (model) {
-                        var modelUrl = "app/renders/" + (model.split('/')[6]).split('.')[0] + "/" + (model.split('/')[6]).split('.')[0] + ".json";
-                        var modelDownload = (model.split('/')[6]).split('.')[0] + ".json";
+                  $scope.downloadModel = function (id) {
+                        var modelUrl = "app/renders/" + id + "/" + id + ".json";
+                        var modelDownload = id + ".json";
                         $http({
                               url: modelUrl,
                               method: "GET",
@@ -207,9 +207,9 @@ angular
                         });
                   }
 
-                  $scope.downloadCtrl = function (ctrl) {
-                        var ctrlUrl = "app/renders/" + (ctrl.split('/')[6]).split('.')[0] + "/" + (ctrl.split('/')[6]).split('.')[0] + ".js";
-                        var ctrlDownload = (ctrl.split('/')[6]).split('.')[0] + ".ctl";
+                  $scope.downloadCtrl = function (id) {
+                        var ctrlUrl = "app/renders/" + id + "/" + id + ".ctl";
+                        var ctrlDownload = id + ".ctl";
                         $http({
                               url: ctrlUrl,
                               method: "GET",
@@ -219,9 +219,9 @@ angular
                         });
                   }
 
-                  $scope.downloadView = function (view) {
-                        var viewUrl = "app/renders/" + (view.split('/')[6]).split('.')[0] + "/" + (view.split('/')[6]).split('.')[0] + ".html";
-                        var viewDownload = (view.split('/')[6]).split('.')[0] + ".ang";
+                  $scope.downloadView = function (id) {
+                        var viewUrl = "app/renders/" + id + "/" + id + ".ctl";
+                        var viewDownload = id + ".ang";
                         $http({
                               url: viewUrl,
                               method: "GET",

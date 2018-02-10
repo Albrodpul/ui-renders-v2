@@ -56,9 +56,9 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
           return ctrl;
         },
         templateProvider: function ($templateRequest, items) {
-          const view = (items.data[0].view.split('/')[6]).split('.')[0];
+          const view = items.data[0].view.split('/')[6];
           const id = items.data[0].id;
-          var pathToTemplate = 'app/renders/' + id + '/' + view + ".html";
+          var pathToTemplate = 'app/renders/' + id + '/' + view;
           return $templateRequest(pathToTemplate);
         }
       })

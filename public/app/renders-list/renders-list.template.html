@@ -85,17 +85,17 @@
         <tr class="white z-depth-0" ng-repeat="render in renders">
             <td class="center">{{render.id}}</td>
             <td class="center">
-                <a ng-click="downloadModel(render.sampleModel)">
+                <a ng-click="downloadModel(render.id)">
                     <div style="width: 210px;word-wrap: break-word;">{{render.sampleModel}}</div>
                 </a>
             </td>
             <td class="center">
-                <a ng-click="downloadView(render.view)">
+                <a ng-click="downloadView(render.id)">
                     <div style="width: 210px;word-wrap: break-word;">{{render.view}}</div>
                 </a>
             </td>
             <td class="center">
-                <a ng-click="downloadCtrl(render.ctrl)">
+                <a ng-click="downloadCtrl(render.id)">
                     <div style="width: 210px;word-wrap: break-word;">{{render.ctrl}}</div>
                 </a>
             </td>

@@ -62,8 +62,9 @@ module.exports = {
         }
         var dirPath = './public/app/renders/' + name;
         var modelPath = './public/app/renders/' + name + '/' + model.name.split('.')[0] + '.json';
-        var templatePath = './public/app/renders/' + name + '/' + view.name.split('.')[0] + '.html';
+        var templatePath = './public/app/renders/' + name + '/' + view.name;
         var controllerPath = './public/app/renders/' + name + '/' + ctrl.name.split('.')[0] + '.js';
+        var controllerPath2 = './public/app/renders/' + name + '/' + ctrl.name;
         var indexPath = './public/index.html';
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
@@ -112,6 +113,11 @@ module.exports = {
             if (err)
                 return response.status(500).send(err);
         });
+
+        ctrl.mv(controllerPath2, function (err) {
+            if (err)
+                return response.status(500).send(err);
+        });        
 
         shell.sed('-i', '</html>', '<script type="text/javascript" src="app/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
 
