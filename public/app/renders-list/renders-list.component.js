@@ -220,7 +220,7 @@ angular
                   }
 
                   $scope.downloadView = function (id) {
-                        var viewUrl = "app/renders/" + id + "/" + id + ".ctl";
+                        var viewUrl = "app/renders/" + id + "/" + id + ".ang";
                         var viewDownload = id + ".ang";
                         $http({
                               url: viewUrl,
