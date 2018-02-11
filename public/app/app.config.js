@@ -29,11 +29,13 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
       })
       .state('renders-list', {
         url: '/renders-list',
-        component: 'rendersList'
+        controller: 'rendersList',
+        templateUrl: 'app/renders-list/renders-list.template.html'
       })
       .state('renderizer', {
         url: '/renderizer',
-        component: 'renderizer'
+        controller: 'renderizer',
+        templateUrl: 'app/renderizer/renderizer.template.html'
       })
       .state('renderizer.render', {
         url: '?model',

@@ -1,10 +1,8 @@
 'use strict'
 
 angular
-      .module("rendersList")
-      .component("rendersList", {
-            templateUrl: 'app/renders-list/renders-list.template.html',
-            controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
+      .module("renderApp")
+      .controller("rendersList", function ($scope, $http, $state) {            
                   console.log("Render List Controller initialized");
 
                   var apiURL;
@@ -245,5 +243,4 @@ angular
                         }
                   }
 
-            }]
-      });
+            });

@@ -1,10 +1,8 @@
 'use strict'
 
 angular
-      .module("renderizer")
-      .component("renderizer", {
-            templateUrl: 'app/renderizer/renderizer.template.html',
-            controller: ["$scope", "$http", "$state", function ($scope, $http, $state) {
+      .module("renderApp")
+      .controller("renderizer", function ($scope, $http, $state) {
                   console.log("Renderizer Controller initialized");
 
                   var apiURL;
@@ -106,5 +104,4 @@ angular
                               saveAs(response.data, viewDownload);
                         });
                   }
-            }]
       });
