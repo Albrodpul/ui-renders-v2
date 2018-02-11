@@ -12,30 +12,30 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
       .state('home', {
         url: '/',
         controller: 'HomeController',
-        templateUrl: 'app/home/home.template.html',
+        templateUrl: 'app/states/home/home.template.html',
         controllerAs: 'vm'
       })
       .state('profile', {
         url: '/profile',
         controller: 'ProfileController',
-        templateUrl: 'app/profile/profile.template.html',
+        templateUrl: 'app/states/profile/profile.template.html',
         controllerAs: 'vm'
       })
       .state('callback', {
         url: '/callback',
         controller: 'CallbackController',
-        templateUrl: 'app/callback/callback.html',
+        templateUrl: 'app/states/callback/callback.html',
         controllerAs: 'vm'
       })
       .state('renders-list', {
         url: '/renders-list',
         controller: 'rendersList',
-        templateUrl: 'app/renders-list/renders-list.template.html'
+        templateUrl: 'app/states/renders-list/renders-list.template.html'
       })
       .state('renderizer', {
         url: '/renderizer',
         controller: 'renderizer',
-        templateUrl: 'app/renderizer/renderizer.template.html'
+        templateUrl: 'app/states/renderizer/renderizer.template.html'
       })
       .state('renderizer.render', {
         url: '?model',
@@ -54,20 +54,20 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
           }]
         },
         controllerProvider: function (items) {
-          var ctrl = (items.data[0].ctrl.split('/')[6]).split('.')[0];
+          var ctrl = (items.data[0].ctrl.split('/')[7]).split('.')[0];
           return ctrl;
         },
         templateProvider: function ($templateRequest, items) {
-          const view = items.data[0].view.split('/')[6];
+          const view = items.data[0].view.split('/')[7];
           const id = items.data[0].id;
-          var pathToTemplate = 'app/renders/' + id + '/' + view;
+          var pathToTemplate = 'app/states/renders/' + id + '/' + view;
           return $templateRequest(pathToTemplate);
         }
       })
       .state('about', {
         url: '/about',
         controller: 'about',
-        templateUrl: 'app/about/about.template.html'
+        templateUrl: 'app/states/about/about.template.html'
       })
 
 

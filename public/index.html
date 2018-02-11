@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="bower_components/materialize/dist/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/index.css" rel="stylesheet">
-  <link rel="stylesheet" href="app/profile/profile.stylesheet.css">
-  <link rel="stylesheet" href="app/navbar/navbar.stylesheet.css">
+  <link rel="stylesheet" href="app/states/profile/profile.stylesheet.css">
+  <link rel="stylesheet" href="app/directives/navbar/navbar.stylesheet.css">
 
   <!-- BOWER COMPONENTS -->
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -32,16 +32,16 @@
   <script type="text/javascript" src="app/app.run.js"></script>
 
   <!-- SERVICES -->
-  <script type="text/javascript" src="app/auth/auth.service.js"></script>
+  <script type="text/javascript" src="app/services/auth/auth.service.js"></script>
 
   <!-- CONTROLLER -->
-  <script type="text/javascript" src="app/home/home.controller.js"></script>
-  <script type="text/javascript" src="app/navbar/navbar.directive.js"></script>
-  <script type="text/javascript" src="app/profile/profile.controller.js"></script>
-  <script type="text/javascript" src="app/callback/callback.controller.js"></script>
-  <script type="text/javascript" src="app/renderizer/renderizer.controller.js"></script>
-  <script type="text/javascript" src="app/renders-list/renders-list.controller.js"></script>
-  <script type="text/javascript" src="app/about/about.controller.js"></script>
+  <script type="text/javascript" src="app/states/home/home.controller.js"></script>
+  <script type="text/javascript" src="app/directives/navbar/navbar.directive.js"></script>
+  <script type="text/javascript" src="app/states/profile/profile.controller.js"></script>
+  <script type="text/javascript" src="app/states/callback/callback.controller.js"></script>
+  <script type="text/javascript" src="app/states/renderizer/renderizer.controller.js"></script>
+  <script type="text/javascript" src="app/states/renders-list/renders-list.controller.js"></script>
+  <script type="text/javascript" src="app/states/about/about.controller.js"></script>
 
   <script type="text/javascript" src="js/preloader.js"></script>
 
@@ -92,15 +92,16 @@
   </div>
   <footer class="page-footer #e3f2fd blue lighten-5">
     <div class="footer-copyright #90caf9 blue lighten-3">
-        <div class="container footer-container">
-            <span class="white-text text-lighten-4">© 2017-2018 ARenderizer. All rights reserved.</span>
-            <a class="white-text text-lighten-4 right" ui-sref="about">About</a>
-        </div>
+      <div class="container footer-container">
+        <span class="white-text text-lighten-4">© 2017-2018 ARenderizer. All rights reserved.</span>
+        <a class="white-text text-lighten-4 right" ui-sref="about">About</a>
+      </div>
     </div>
-</footer>
+  </footer>
 </body>
 
 <!-- RENDERS CONTROLLERS -->
-<script type="text/javascript" src="app/renders/test/test.js"></script>
-<script type="text/javascript" src="app/renders/test2/test2.js"></script>
+<script type="text/javascript" src="app/states/renders/test/test.js"></script>
+<script type="text/javascript" src="app/states/renders/test2/test2.js"></script>
+
 </html>

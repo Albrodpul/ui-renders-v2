@@ -10,10 +10,10 @@ angular
                   var hostname = window.location.hostname;
                   if (hostname == "localhost") {
                         apiURL = 'http://localhost:8080/api/v1/renders';
-                        uiURL = 'http://localhost:8800/app/renders';
+                        uiURL = 'http://localhost:8800/app/states/renders';
                   } else {
                         apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
-                        uiURL = "https://ui-renders.herokuapp.com/app/renders";
+                        uiURL = "https://ui-renders.herokuapp.com/app/states/renders";
                   }
 
                   $state.go("renderizer");
@@ -70,7 +70,7 @@ angular
                   }
 
                   $scope.downloadModel = function (id) {
-                        var modelUrl = "app/renders/" + id + "/" + id + ".json";
+                        var modelUrl = "app/states/renders/" + id + "/" + id + ".json";
                         var modelDownload = id + ".json";
                         $http({
                               url: modelUrl,
@@ -82,7 +82,7 @@ angular
                   }
 
                   $scope.downloadCtrl = function (id) {
-                        var ctrlUrl = "app/renders/" + id + "/" + id + ".ctl";
+                        var ctrlUrl = "app/states/renders/" + id + "/" + id + ".ctl";
                         var ctrlDownload = id + ".ctl";
                         $http({
                               url: ctrlUrl,
@@ -94,7 +94,7 @@ angular
                   }
 
                   $scope.downloadView = function (id) {
-                        var viewUrl = "app/renders/" + id + "/" + id + ".ang";
+                        var viewUrl = "app/states/renders/" + id + "/" + id + ".ang";
                         var viewDownload = id + ".ang";
                         $http({
                               url: viewUrl,

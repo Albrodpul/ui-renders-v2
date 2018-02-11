@@ -12,10 +12,10 @@ module.exports = {
         var hostname = request.get('host').split(':')[0];
         if (hostname == "localhost") {
             apiURL = 'http://localhost:8080/api/v1/renders';
-            uiURL = 'http://localhost:8800/app/renders';
+            uiURL = 'http://localhost:8800/app/states/renders';
         } else {
             apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
-            uiURL = "https://ui-renders.herokuapp.com/app/renders";
+            uiURL = "https://ui-renders.herokuapp.com/app/states/renders";
         }
         if (!name) {
             console.log("WARNING: Render name input must be fulfilled")
@@ -60,11 +60,11 @@ module.exports = {
             console.log("WARNING: Controller file extension must be .ctl");
             return response.status(400);
         }
-        var dirPath = './public/app/renders/' + name;
-        var modelPath = './public/app/renders/' + name + '/' + model.name.split('.')[0] + '.json';
-        var templatePath = './public/app/renders/' + name + '/' + view.name;
-        var controllerPath = './public/app/renders/' + name + '/' + ctrl.name.split('.')[0] + '.js';
-        var controllerPath2 = './public/app/renders/' + name + '/' + ctrl.name;
+        var dirPath = './public/app/states/renders/' + name;
+        var modelPath = './public/app/states/renders/' + name + '/' + model.name.split('.')[0] + '.json';
+        var templatePath = './public/app/states/renders/' + name + '/' + view.name;
+        var controllerPath = './public/app/states/renders/' + name + '/' + ctrl.name.split('.')[0] + '.js';
+        var controllerPath2 = './public/app/states/renders/' + name + '/' + ctrl.name;
         var indexPath = './public/index.html';
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
@@ -119,7 +119,7 @@ module.exports = {
                 return response.status(500).send(err);
         });        
 
-        shell.sed('-i', '</html>', '<script type="text/javascript" src="app/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
+        shell.sed('-i', '</html>', '<script type="text/javascript" src="app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
 
         response.sendStatus(201);
         response.end();
@@ -130,7 +130,7 @@ module.exports = {
         const dirPath = './public/app/renders/' + id;
         var indexPath = './public/index.html';
         fsextra.remove(dirPath);
-        shell.sed('-i', '<script type="text/javascript" src="app/renders/' + id + '/' + id + '.js"></script>', '', indexPath);
+        shell.sed('-i', '<script type="text/javascript" src="app/states/renders/' + id + '/' + id + '.js"></script>', '', indexPath);
         response.sendStatus(200);
         response.end();
     }

@@ -6,7 +6,7 @@
     .directive('navbar',
       function navbar() {
         return {
-          templateUrl: 'app/navbar/navbar.template.html',
+          templateUrl: 'app/directives/navbar/navbar.template.html',
           controller: navbarController,
           controllerAs: 'vm'
         }

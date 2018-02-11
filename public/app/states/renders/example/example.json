@@ -1,0 +1,9 @@
+{ 
+  "renders": [{
+        "default": "http://localhost:8080/api/v1/renders/example"
+   }],
+  "data": [{
+        "example":"Example working!",
+        "example2":"Example is working perfectly!"
+  }]
+}
