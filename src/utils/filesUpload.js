@@ -21,17 +21,17 @@ module.exports = {
             console.log("WARNING: Render name input must be fulfilled")
             return response.status(400);
         }
-        var model = request.files.model;
+        var model = request.files.modelFile;
         if (!model) {
             console.log("WARNING: No sample model json attached")
             return response.status(400);
         }
-        var view = request.files.view;
+        var view = request.files.viewFile;
         if (!view) {
             console.log("WARNING: No view html attached")
             return response.status(400);
         }
-        var ctrl = request.files.ctrl;
+        var ctrl = request.files.ctrlFile;
         if (!ctrl) {
             console.log("WARNING: No controller attached");
             return response.status(400);
@@ -117,7 +117,7 @@ module.exports = {
         ctrl.mv(controllerPath2, function (err) {
             if (err)
                 return response.status(500).send(err);
-        });        
+        });
 
         shell.sed('-i', '</html>', '<script type="text/javascript" src="app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
 
@@ -127,9 +127,11 @@ module.exports = {
     deleteFiles: function (request, response, next) {
         var id = request.params.id;
         console.log("Deleting folder " + id);
-        const dirPath = './public/app/renders/' + id;
+        const dirPath = './public/app/states/renders/' + id;
         var indexPath = './public/index.html';
-        fsextra.remove(dirPath);
+        fsextra.remove(dirPath, function (err) {
+            if (err) return console.error(err)
+        })
         shell.sed('-i', '<script type="text/javascript" src="app/states/renders/' + id + '/' + id + '.js"></script>', '', indexPath);
         response.sendStatus(200);
         response.end();

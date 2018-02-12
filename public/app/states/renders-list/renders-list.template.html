@@ -11,41 +11,39 @@
     </div>
 </div>
 <div class="row">
-    <form ref='uploadForm' id='uploadForm' action='/uploadFiles' method='post' encType="multipart/form-data" target="hiddenFrame">
-        <div class="input-field col s2" style="margin-top: 20px;">
-            <input type="text" id="name" name="name" ng-model="name">
-            <label for="name">Render name</label>
+    <div class="input-field col s2" style="margin-top: 20px;">
+        <input type="text" id="name" name="name" ng-model="name">
+        <label for="name">Render name</label>
+    </div>
+    <div class="file-field input-field col s4">
+        <div class="btn waves-effect waves-light #9e9e9e grey" style="margin-left: 50px;">
+            Select Sample Model
+            <input tooltipped type="file" name="model" id="modelFile" data-position="top" data-delay="50" data-tooltip="Attach a .json file!"
+            />
         </div>
-        <div class="file-field input-field col s4">
-            <div class="btn waves-effect waves-light #9e9e9e grey" style="margin-left: 50px;">
-                Select Sample Model
-                <input tooltipped type="file" name="model" id="modelFile" data-position="top" data-delay="50" data-tooltip="Attach a .json file!"
-                />
-            </div>
+    </div>
+    <div class="file-field input-field col s3">
+        <div class="btn waves-effect waves-light #9e9e9e grey">
+            Select View
+            <input tooltipped type="file" name="view" id="viewFile" data-position="top" data-delay="50" data-tooltip="Attach a .ang file!"
+            />
         </div>
-        <div class="file-field input-field col s3">
-            <div class="btn waves-effect waves-light #9e9e9e grey">
-                Select View
-                <input tooltipped type="file" name="view" id="viewFile" data-position="top" data-delay="50" data-tooltip="Attach a .ang file!"
-                />
-            </div>
+    </div>
+    <div class="file-field input-field col s3" style="margin-left: -20px;">
+        <div class="btn waves-effect waves-light #9e9e9e grey">
+            Select Ctrl
+            <input tooltipped type="file" name="ctrl" id="ctrlFile" data-position="top" data-delay="50" data-tooltip="Attach a .ctl file!"
+            />
         </div>
-        <div class="file-field input-field col s3" style="margin-left: -20px;">
-            <div class="btn waves-effect waves-light #9e9e9e grey">
-                Select Ctrl
-                <input tooltipped type="file" name="ctrl" id="ctrlFile" data-position="top" data-delay="50" data-tooltip="Attach a .ctl file!"
-                />
-            </div>
-        </div>
-        <br />
-        <br />
-        <br />
-        <div class="col s3 offset-s10">
-            <button class="btn waves-effect waves-light blue" type='submit' value='Upload!' ng-click="add()" style="margin-left:-10px;">
-                Add Render
-            </button>
-        </div>
-    </form>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="col s3 offset-s10">
+        <button class="btn waves-effect waves-light blue" type='submit' value='Upload!' ng-click="add()" style="margin-left:-10px;">
+            Add Render
+        </button>
+    </div>
 </div>
 <br />
 <br />
