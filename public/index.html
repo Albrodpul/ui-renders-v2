@@ -68,6 +68,7 @@
     </div>
   </div>
   <navbar></navbar>
+  <!--<ui-view></ui-view>-->
   <ui-view ng-if="vm.auth.isAuthenticated()"></ui-view>
   <div ng-if="!vm.auth.isAuthenticated()">
     <br />
@@ -106,4 +107,6 @@
 <!-- RENDERS CONTROLLERS -->
 <script type="text/javascript" src="app/states/renders/test/test.js"></script>
 <script type="text/javascript" src="app/states/renders/test2/test2.js"></script>
+
+
 </html>
