@@ -18,20 +18,26 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
       .state('renderizer-ui', {
         url: '/?model',
         resolve: {
+          //obtiene el contenido del modelo
           apiUrl: ['$http', '$stateParams', function ($http, $stateParams) {
+            //read sample model
             return $http({
               method: 'GET',
               url: $stateParams.model
             });
           }],
-          items: ['$http', 'apiUrl', function ($http, apiUrl) {
+          //obtiene el objeto
+          items: ['$http', 'apiUrl', '$stateParams', function ($http, apiUrl, $stateParams) {
+            //si el modelo tiene la linea renders
             if (apiUrl.data.renders) {
               return $http({
                 method: 'GET',
                 url: apiUrl.data.renders.default
               });
+            //en caso de que tenga type y no la línea renders
             } else {
               var urlAux;
+              var model = ($stateParams.model.split('/')[7]).split('.')[0];
               if (window.location.hostname == "localhost") {
                 urlAux = "http://localhost:8080/api/v1/renders";
               } else {
@@ -39,7 +45,7 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
               }
               return $http({
                 method: 'GET',
-                url: urlAux + "?type=" + apiUrl.data.type
+                url: urlAux + "?id=" + model
               });
             }
           }]
