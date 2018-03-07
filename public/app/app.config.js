@@ -47,10 +47,68 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
             });
           }],
           items: ['$http', 'apiUrl', function ($http, apiUrl) {
+            if (apiUrl.data.renders) {
+              return $http({
+                method: 'GET',
+                url: apiUrl.data.renders.default
+              });
+            } else {
+              var urlAux;
+              if (window.location.hostname == "localhost") {
+                urlAux = "http://localhost:8080/api/v1/renders";
+              } else {
+                urlAux = "https://api-renders.herokuapp.com/api/v1/renders";
+              }
+              return $http({
+                method: 'GET',
+                url: urlAux + "?type=" + apiUrl.data.type
+              });
+            }
+          }]
+        },
+        controllerProvider: function (items) {
+          var ctrl = (items.data[0].ctrl.split('/')[7]).split('.')[0];
+          return ctrl;
+        },
+        templateProvider: function ($templateRequest, items) {
+          const view = items.data[0].view.split('/')[7];
+          const id = items.data[0].id;
+          var pathToTemplate = 'app/states/renders/' + id + '/' + view;
+          return $templateRequest(pathToTemplate);
+        }
+      })
+      .state('renderizer-ui', {
+        url: '/renderizer-ui',
+        controller: 'renderizer-ui',
+        templateUrl: 'app/states/renderizer-ui/renderizer-ui.template.html',
+      })
+      .state('renderizer-ui.render', {
+        url: '?model',
+        resolve: {
+          apiUrl: ['$http', '$stateParams', function ($http, $stateParams) {
             return $http({
               method: 'GET',
-              url: apiUrl.data.renders[0].default
+              url: $stateParams.model
             });
+          }],
+          items: ['$http', 'apiUrl', function ($http, apiUrl) {
+            if (apiUrl.data.renders) {
+              return $http({
+                method: 'GET',
+                url: apiUrl.data.renders.default
+              });
+            } else {
+              var urlAux;
+              if (window.location.hostname == "localhost") {
+                urlAux = "http://localhost:8080/api/v1/renders";
+              } else {
+                urlAux = "https://api-renders.herokuapp.com/api/v1/renders";
+              }
+              return $http({
+                method: 'GET',
+                url: urlAux + "?type=" + apiUrl.data.type
+              });
+            }
           }]
         },
         controllerProvider: function (items) {

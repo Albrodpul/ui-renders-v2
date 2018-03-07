@@ -59,7 +59,7 @@ angular
                   } else {
                         var folderURL = uiURL + '/' + name;
                         var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"ng"}';
-                        var dbURL = apiURL + '/' + name;
+                        var dbURL = apiURL + '?id=' + name;
                         const reader = new FileReader();
                         reader.onload = () => {
                               let text = reader.result;
@@ -82,8 +82,8 @@ angular
                                                 $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
                                                 $scope.$apply();
                                           } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") ||
-                                                !lines.includes("$scope.model = response.data.data[0];")) {
-                                                $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data.data[0];. Download and look example.ctl";
+                                                !lines.includes("$scope.model = response.data;")) {
+                                                $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data;. Download and look example.ctl";
                                                 $scope.$apply();
                                           } else {
                                                 $http
@@ -117,15 +117,15 @@ angular
             };
 
             $scope.downloadExampleModel = function () {
-                  var url = apiURL + '/example';
+                  var url = apiURL + '?id=example';
                   var jsonContent = '{ \r\n';
-                  jsonContent += '  "renders": [{\r\n';
+                  jsonContent += '  "renders": {\r\n';
                   jsonContent += '        "default": "' + url + '"\r\n';
-                  jsonContent += '   }],\r\n';
-                  jsonContent += '  "data": [{\r\n';
+                  jsonContent += '   },\r\n';
+                  jsonContent += '  "data": {\r\n';
                   jsonContent += '        "example":"Example working!",\r\n';
                   jsonContent += '        "example2":"Example is working perfectly!"\r\n';
-                  jsonContent += '  }]\r\n';
+                  jsonContent += '  }\r\n';
                   jsonContent += '}';
                   var blob = new Blob([jsonContent], {
                         type: 'text/html;charset=UTF-8;'
@@ -150,7 +150,7 @@ angular
             $scope.downloadExampleView = function () {
                   var htmlContent = "<h5>Example Template</h5>\r\n";
                   htmlContent += "<br />\r\n";
-                  htmlContent += "{{model.example}}";
+                  htmlContent += "{{model.data.example}}";
                   var blob = new Blob([htmlContent], {
                         type: 'text/html;charset=UTF-8;'
                   });
@@ -180,7 +180,7 @@ angular
                   jsContent += "            console.log('Example Controller Initialized');\r\n";
                   jsContent += "            $http.get('" + uiURL + "/example/example.json')\r\n";
                   jsContent += "                .then(function(response){\r\n";
-                  jsContent += "                      $scope.model = response.data.data[0];\r\n";
+                  jsContent += "                      $scope.model = response.data;\r\n";
                   jsContent += "            });\r\n";
                   jsContent += "\r\n";
                   jsContent += "      });";

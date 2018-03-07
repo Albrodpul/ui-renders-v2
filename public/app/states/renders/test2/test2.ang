@@ -1,3 +1,3 @@
 <h5>Test2 Template</h5>
 
-{{model.test3}}
+{{model.data.prueba1}}

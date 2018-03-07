@@ -72,8 +72,8 @@ module.exports = {
             console.log('WARNING: Model must include "renders":');
             return response.status(400);
         }
-        if (!modelLines.includes('"default": "' + apiURL + '/' + name + '"')) {
-            console.log('WARNING: Model must include "default": "' + apiURL + '/' + name + '"');
+        if (!modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) {
+            console.log('WARNING: Model must include "default": "' + apiURL + '?id=' + name + '"');
             return response.status(400);
         }
         if (!ctrlLines.includes(".module('renderApp')")) {
@@ -85,8 +85,8 @@ module.exports = {
             return response.status(400);
         }
         if (!ctrlLines.includes("$http.get('" + uiURL + "/" + name + "/" + name + ".json'") ||
-            !ctrlLines.includes("$scope.model = response.data.data[0];")) {
-            console.log("WARNING: Controller must include $http.get('" + uiURL + "/" + name + "/" + name + ".json' and $scope.model = response.data.data[0];");
+            !ctrlLines.includes("$scope.model = response.data;")) {
+            console.log("WARNING: Controller must include $http.get('" + uiURL + "/" + name + "/" + name + ".json' and $scope.model = response.data;");
             return response.status(400);
         }
         if (fs.existsSync(dirPath)) {

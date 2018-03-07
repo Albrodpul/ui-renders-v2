@@ -6,7 +6,7 @@ angular
             console.log("Test Controller Initialized");
             $http.get("https://ui-renders.herokuapp.com/app/states/renders/test/test.json")
                   .then(function (response) {
-                        $scope.model = response.data.data[0];
+                        $scope.model = response.data;
                   });
 
 

@@ -1,4 +1,4 @@
 <h5>Test Template</h5>
 
-{{model.test2}}
+{{model.data.test2}}
 <br />

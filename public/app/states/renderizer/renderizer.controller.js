@@ -43,7 +43,7 @@ angular
                               delete $scope.ctrl;
                               $state.go("renderizer");
                         } else {
-                              $http.get(apiURL + "/" + id)
+                              $http.get(apiURL + "?id=" + id)
                                     .then(function (response) {
                                           $scope.model = response.data[0].sampleModel;
                                           $scope.view = response.data[0].view;
@@ -56,7 +56,7 @@ angular
                         if (!id && !model && !view && !ctrl) {
                               $state.go("renderizer");
                         } else {
-                              $http.get(apiURL + "/" + id)
+                              $http.get(apiURL + "?id=" + id)
                                     .then(function (response) {
                                           $scope.error = "";
                                           $state.go("renderizer.render", {

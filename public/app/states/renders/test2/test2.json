@@ -1,9 +1,9 @@
-{ 
-    "renders": [{
-          "default": "https://api-renders.herokuapp.com/api/v1/renders/test2"
-     }],
-    "data": [{
-          "test3":"false",
-          "test4":"true"
-    }]
+{
+  "renders": {
+    "default": "https://api-renders.herokuapp.com/api/v1/renders?id=test2"
+  },
+  "data": {
+    "prueba1": "Prueba con éxito",
+    "prueba2": "Prueba con más éxito"
   }
+}
