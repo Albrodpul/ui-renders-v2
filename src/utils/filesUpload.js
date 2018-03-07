@@ -66,14 +66,13 @@ module.exports = {
         var controllerPath = './public/app/states/renders/' + name + '/' + ctrl.name.split('.')[0] + '.js';
         var controllerPath2 = './public/app/states/renders/' + name + '/' + ctrl.name;
         var indexPath = './public/index.html';
+        var indexPath2 = './public/renderizer-ui/index.html';
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
-        if (!modelLines.includes('"renders":')) {
-            console.log('WARNING: Model must include "renders":');
-            return response.status(400);
-        }
-        if (!modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) {
-            console.log('WARNING: Model must include "default": "' + apiURL + '?id=' + name + '"');
+        if ((!modelLines.includes('"renders":') ||
+            !modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) &&
+            !modelLines.includes(!modelLines.includes('"type":'))) {
+            console.log('WARNING: Model must include "renders": and "default": "' + apiURL + '?id=' + name + '" or "type":');
             return response.status(400);
         }
         if (!ctrlLines.includes(".module('renderApp')")) {
@@ -120,7 +119,8 @@ module.exports = {
         });
 
         shell.sed('-i', '</html>', '<script type="text/javascript" src="app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
-
+        shell.sed('-i', '</html>', '<script type="text/javascript" src="../app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath2);
+        
         response.sendStatus(201);
         response.end();
     },
@@ -129,10 +129,12 @@ module.exports = {
         console.log("Deleting folder " + id);
         const dirPath = './public/app/states/renders/' + id;
         var indexPath = './public/index.html';
+        var indexPath2 = './public/renderizer-ui/index.html';
         fsextra.remove(dirPath, function (err) {
             if (err) return console.error(err)
         })
         shell.sed('-i', '<script type="text/javascript" src="app/states/renders/' + id + '/' + id + '.js"></script>', '', indexPath);
+        shell.sed('-i', '<script type="text/javascript" src="../app/states/renders/' + id + '/' + id + '.js"></script>', '', indexPath2);
         response.sendStatus(200);
         response.end();
     }

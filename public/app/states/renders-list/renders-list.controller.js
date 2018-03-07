@@ -36,8 +36,11 @@ angular
                   var modelFile = (document.getElementById('modelFile')).files[0];
                   var viewFile = (document.getElementById('viewFile')).files[0];
                   var ctrlFile = (document.getElementById('ctrlFile')).files[0];
+                  var patt = new RegExp("^[a-zA-Z0-9]+$")
                   if (!name) {
                         $scope.error = "Render name input must be fulfilled";
+                  }else if(!patt.test(name)){
+                        $scope.error = "Render name can contain only letters and numbers";
                   } else if (!modelFile) {
                         $scope.error = "No sample model file attached";
                   } else if (!viewFile) {
@@ -58,19 +61,33 @@ angular
                         $scope.error = "Controller file extension .ctl";
                   } else {
                         var folderURL = uiURL + '/' + name;
-                        var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"ng"}';
                         var dbURL = apiURL + '?id=' + name;
                         const reader = new FileReader();
                         reader.onload = () => {
                               let text = reader.result;
                               var lines = text.split("\n").toString();
-                              if (!lines.includes('"renders":')) {
-                                    $scope.error = modelFile.name + ' must include "renders":. Download and look example.json';
-                                    $scope.$apply();
-                              } else if (!lines.includes('"default": "' + dbURL + '"')) {
-                                    $scope.error = modelFile.name + ' must include "default": "' + dbURL + '". Download and look example.json';
+                              if ((!lines.includes('"renders":') || 
+                                    !lines.includes('"default": "' + dbURL + '"')) && 
+                                    !lines.includes('"type":')) {
+                                    $scope.error = modelFile.name + ' must include "renders": and "default": "' + dbURL + '" or "type":. Download and look example.json';
                                     $scope.$apply();
                               } else {
+                                    var line = lines.split(",");
+                                    var flag = -1;
+                                    for (var i = 0; i < line.length; i++) {
+                                          if (line[i].includes('"type":')) {
+                                                flag = i;
+                                                break;
+                                          }
+                                    }
+                                    if (flag != -1) {
+                                          var current = line[flag].split('"');
+                                          var type = current[3];
+                                          var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"' + type + '"}';
+                                    } else {
+                                          var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"ng"}';
+                                    }
+                                    console.log(data);
                                     const reader = new FileReader();
                                     reader.onload = () => {
                                           let text = reader.result;

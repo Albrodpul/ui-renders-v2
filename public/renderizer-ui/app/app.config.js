@@ -2,8 +2,8 @@
 
 angular.
 module('renderApp').
-config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider',
-  function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider) {
+config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
+  function ($stateProvider, $locationProvider, $urlRouterProvider) {
 
     var initInjector = angular.injector(['ng']);
     var $http = initInjector.get('$http');
@@ -15,30 +15,8 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         templateUrl: 'app/states/home/home.template.html',
         controllerAs: 'vm'
       })
-      .state('profile', {
-        url: '/profile',
-        controller: 'ProfileController',
-        templateUrl: 'app/states/profile/profile.template.html',
-        controllerAs: 'vm'
-      })
-      .state('callback', {
-        url: '/callback',
-        controller: 'CallbackController',
-        templateUrl: 'app/states/callback/callback.html',
-        controllerAs: 'vm'
-      })
-      .state('renders-list', {
-        url: '/renders-list',
-        controller: 'rendersList',
-        templateUrl: 'app/states/renders-list/renders-list.template.html'
-      })
-      .state('renderizer', {
-        url: '/renderizer',
-        controller: 'renderizer',
-        templateUrl: 'app/states/renderizer/renderizer.template.html'
-      })
-      .state('renderizer.render', {
-        url: '?model',
+      .state('renderizer-ui', {
+        url: '/?model',
         resolve: {
           apiUrl: ['$http', '$stateParams', function ($http, $stateParams) {
             return $http({
@@ -73,14 +51,9 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         templateProvider: function ($templateRequest, items) {
           const view = items.data[0].view.split('/')[7];
           const id = items.data[0].id;
-          var pathToTemplate = 'app/states/renders/' + id + '/' + view;
+          var pathToTemplate = '../app/states/renders/' + id + '/' + view;
           return $templateRequest(pathToTemplate);
         }
-      })
-      .state('about', {
-        url: '/about',
-        controller: 'about',
-        templateUrl: 'app/states/about/about.template.html'
       })
 
 
@@ -88,17 +61,7 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
 
     $locationProvider.hashPrefix('');
 
-    // Initialization for the angular-auth0 library
-    angularAuth0Provider.init({
-      clientID: AUTH0_CLIENT_ID,
-      domain: AUTH0_DOMAIN,
-      responseType: 'token id_token',
-      audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
-      redirectUri: AUTH0_CALLBACK_URL,
-      scope: 'openid profile'
-    });
-
-    console.log("App Initialized");
+    console.log("App 2 Initialized");
 
 
   }
