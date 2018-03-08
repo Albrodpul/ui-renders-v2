@@ -8,4 +8,9 @@ angular
                   .then(function (response) {
                         $scope.model = response.data;
                   });
+
+            $scope.change = function () {
+                  $scope.cell = $scope.model.data.test3;
+            }
+
       });

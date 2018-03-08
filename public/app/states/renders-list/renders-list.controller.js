@@ -39,7 +39,7 @@ angular
                   var patt = new RegExp("^[a-zA-Z0-9]+$")
                   if (!name) {
                         $scope.error = "Render name input must be fulfilled";
-                  }else if(!patt.test(name)){
+                  } else if (!patt.test(name)) {
                         $scope.error = "Render name can contain only letters and numbers";
                   } else if (!modelFile) {
                         $scope.error = "No sample model file attached";
@@ -66,8 +66,8 @@ angular
                         reader.onload = () => {
                               let text = reader.result;
                               var lines = text.split("\n").toString();
-                              if ((!lines.includes('"renders":') || 
-                                    !lines.includes('"default": "' + dbURL + '"')) && 
+                              if ((!lines.includes('"renders":') ||
+                                          !lines.includes('"default": "' + dbURL + '"')) &&
                                     !lines.includes('"type":')) {
                                     $scope.error = modelFile.name + ' must include "renders": and "default": "' + dbURL + '" or "type":. Download and look example.json';
                                     $scope.$apply();
@@ -167,7 +167,11 @@ angular
             $scope.downloadExampleView = function () {
                   var htmlContent = "<h5>Example Template</h5>\r\n";
                   htmlContent += "<br />\r\n";
-                  htmlContent += "{{model.data.example}}";
+                  htmlContent += "{{model.data.example}}\r\n";
+                  htmlContent += "<br />\r\n";
+                  htmlContent += "{{something}}\r\n";
+                  htmlContent += "<br />\r\n";
+                  htmlContent += "<button class='btn' ng-click='generate()'>Generate</button>";
                   var blob = new Blob([htmlContent], {
                         type: 'text/html;charset=UTF-8;'
                   });
@@ -199,6 +203,9 @@ angular
                   jsContent += "                .then(function(response){\r\n";
                   jsContent += "                      $scope.model = response.data;\r\n";
                   jsContent += "            });\r\n";
+                  jsContent += "            $scope.generate = function () {\r\n";
+                  jsContent += "                $scope.something = $scope.model.data.example2;\r\n";
+                  jsContent += "            }\r\n";
                   jsContent += "\r\n";
                   jsContent += "      });";
                   var blob = new Blob([jsContent], {

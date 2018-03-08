@@ -3,7 +3,8 @@
             "default": "https://api-renders.herokuapp.com/api/v1/renders?id=test"
       },
       "data": {
-            "test": "Hola",
-            "test2": "Adiós"
+            "test": "Works!",
+            "test2": "This is working!",
+            "test3": "Button works!"
       }
 }

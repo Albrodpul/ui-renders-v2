@@ -8,5 +8,8 @@ angular
                   .then(function (response) {
                         $scope.model = response.data;
                   });
-      }
-      );
+
+            $scope.generate = function () {
+                  $scope.something = $scope.model.data.prueba2;
+            }
+      });

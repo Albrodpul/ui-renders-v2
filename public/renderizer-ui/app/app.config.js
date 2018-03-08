@@ -34,10 +34,9 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
                 method: 'GET',
                 url: apiUrl.data.renders.default
               });
-            //en caso de que tenga type y no la línea renders
+              //en caso de que tenga type y no la línea renders
             } else {
               var urlAux;
-              var model = ($stateParams.model.split('/')[7]).split('.')[0];
               if (window.location.hostname == "localhost") {
                 urlAux = "http://localhost:8080/api/v1/renders";
               } else {
@@ -45,18 +44,22 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
               }
               return $http({
                 method: 'GET',
-                url: urlAux + "?id=" + model
+                url: urlAux + "?type=" + apiUrl.data.type
               });
             }
           }]
         },
-        controllerProvider: function (items) {
-          var ctrl = (items.data[0].ctrl.split('/')[7]).split('.')[0];
+        controllerProvider: function (items,$stateParams) {
+          var model = ($stateParams.model.split('/')[7]).split('.')[0];
+          items = items.data.filter(i => i.id == model);
+          var ctrl = (items[0].ctrl.split('/')[7]).split('.')[0];
           return ctrl;
         },
-        templateProvider: function ($templateRequest, items) {
-          const view = items.data[0].view.split('/')[7];
-          const id = items.data[0].id;
+        templateProvider: function ($templateRequest, items, $stateParams) {
+          var model = ($stateParams.model.split('/')[7]).split('.')[0];
+          items = items.data.filter(i => i.id == model);
+          const view = items[0].view.split('/')[7];
+          const id = items[0].id;
           var pathToTemplate = '../app/states/renders/' + id + '/' + view;
           return $templateRequest(pathToTemplate);
         }
