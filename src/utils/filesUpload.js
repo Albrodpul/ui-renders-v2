@@ -71,7 +71,7 @@ module.exports = {
         var ctrlLines = ctrl.data.toString();
         if ((!modelLines.includes('"renders":') ||
             !modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) &&
-            !modelLines.includes(!modelLines.includes('"type":'))) {
+            !modelLines.includes('"type":')) {
             console.log('WARNING: Model must include "renders": and "default": "' + apiURL + '?id=' + name + '" or "type":');
             return response.status(400);
         }

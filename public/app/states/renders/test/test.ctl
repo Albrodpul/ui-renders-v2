@@ -7,10 +7,11 @@ angular
             $http.get("https://ui-renders.herokuapp.com/app/states/renders/test/test.json")
                   .then(function (response) {
                         $scope.model = response.data;
+
+
+                        $scope.change = function () {
+                              $scope.cell = $scope.model.data.test3;
+                        }
+
                   });
-
-            $scope.change = function () {
-                  $scope.cell = $scope.model.data.test3;
-            }
-
       });

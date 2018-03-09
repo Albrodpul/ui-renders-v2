@@ -202,11 +202,14 @@ angular
                   jsContent += "            $http.get('" + uiURL + "/example/example.json')\r\n";
                   jsContent += "                .then(function(response){\r\n";
                   jsContent += "                      $scope.model = response.data;\r\n";
-                  jsContent += "            });\r\n";
+                  jsContent += "            \r\n";
                   jsContent += "            $scope.generate = function () {\r\n";
                   jsContent += "                $scope.something = $scope.model.data.example2;\r\n";
                   jsContent += "            }\r\n";
                   jsContent += "\r\n";
+                  jsContent += "            //write your code here\r\n";
+                  jsContent += "\r\n";
+                  jsContent += "            });\r\n";
                   jsContent += "      });";
                   var blob = new Blob([jsContent], {
                         type: 'text/plain;charset=UTF-8;'
