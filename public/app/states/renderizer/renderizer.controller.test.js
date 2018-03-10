@@ -46,13 +46,13 @@ var renderizer = function () {
                 encoding: 'utf8'
             })).toEqual(
                 '{ \r\n' +
-                '  "renders": [{\r\n' +
-                '        "default": "http://localhost:8080/api/v1/renders/example"\r\n' +
-                '   }],\r\n' +
-                '  "data": [{\r\n' +
+                '  "renders": {\r\n' +
+                '        "default": "http://localhost:8080/api/v1/renders?id=example"\r\n' +
+                '   },\r\n' +
+                '  "data": {\r\n' +
                 '        "example":"Example working!",\r\n' +
                 '        "example2":"Example is working perfectly!"\r\n' +
-                '  }]\r\n' +
+                '  }\r\n' +
                 '}'
             );
         });
@@ -68,7 +68,11 @@ var renderizer = function () {
             })).toEqual(
                 "<h5>Example Template</h5>\r\n" +
                 "<br />\r\n" +
-                "{{model.example}}"
+                "{{model.data.example}}\r\n" +
+                "<br />\r\n" + 
+                "{{something}}\r\n" +
+                "<br />\r\n" +
+                "<button class='btn' ng-click='generate()'>Generate</button>"
             );
         });
         browser.driver.sleep(2000);
@@ -89,9 +93,15 @@ var renderizer = function () {
                 "            console.log('Example Controller Initialized');\r\n" +
                 "            $http.get('http://localhost:8800/app/states/renders/example/example.json')\r\n" +
                 "                .then(function(response){\r\n" +
-                "                      $scope.model = response.data.data[0];\r\n" +
-                "            });\r\n" +
+                "                      $scope.model = response.data;\r\n" +
+                "            \r\n" +
+                "            $scope.generate = function () {\r\n" +
+                "                $scope.something = $scope.model.data.example2;\r\n" +
+                "            }\r\n" +
                 "\r\n" +
+                "            //write your code here\r\n" +
+                "\r\n" +
+                "            });\r\n" +
                 "      });"
             );
         });
@@ -189,6 +199,9 @@ var renderizer = function () {
         var renderButton = element(by.xpath('//a[contains(text(), "Render")]'));
         renderButton.click();
         browser.driver.sleep(5000);
+        var generateButton = element(by.xpath('//button[contains(text(), "Generate")]'));
+        generateButton.click();
+        browser.driver.sleep(2000);
     }
 
     this.downloadFiles = function (name) {
