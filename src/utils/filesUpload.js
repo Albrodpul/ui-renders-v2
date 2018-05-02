@@ -39,7 +39,7 @@ module.exports = {
             uiURL = 'http://localhost:8800/app/states/renders';
         } else {
             apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
-            uiURL = "https://ui-renders.herokuapp.com/app/states/renders";
+            uiURL = "https://ui-renders-v2.herokuapp.com/app/states/renders";
         }
         if (!name) {
             console.log("WARNING: Render name input must be fulfilled")
