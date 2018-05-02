@@ -15,16 +15,17 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider',
         templateUrl: 'app/states/home/home.template.html',
         controllerAs: 'vm'
       })
-      .state('renderizer-ui', {
+      .state('home.renderizer', {
         url: '?model&view&ctrl',
         controllerProvider: function ($stateParams) {
           var ctrl = ($stateParams.ctrl.split('/')[7]).split('.')[0];
+          console.log(ctrl);
           return ctrl;
         },
         templateProvider: function ($templateRequest, $stateParams) {
           var model = ($stateParams.model.split('/')[7]).split('.')[0];
           var view = $stateParams.view.split('/')[7];
-          var pathToTemplate = 'app/states/renders/' + model + '/' + view;
+          var pathToTemplate = '../app/states/renders/' + model + '/' + view;
           return $templateRequest(pathToTemplate);
         }
       })
