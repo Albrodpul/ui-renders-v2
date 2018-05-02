@@ -5,6 +5,30 @@ var shell = require('shelljs');
 const fileUpload = require('express-fileupload');
 
 module.exports = {
+    getFiles: function (request, response, next) {
+        var dirPath = './public/app/states/renders';
+        var json = [];
+        fs.readdirSync(dirPath).forEach(file => {
+            var modelPath = './public/app/states/renders/' + file + '/' + file + '.json';
+            var obj = JSON.parse(fs.readFileSync(modelPath, 'utf8'));
+            var data = [];
+            if (obj.type) {
+                data.push(file);
+                data.push(file);
+                data.push(file);
+                data.push(file);
+                data.push(obj.type);
+            } else {
+                data.push(file);
+                data.push(file);
+                data.push(file);
+                data.push(file);
+                data.push("ng");
+            }
+            json.push(data);
+        });
+        response.send(json);
+    },
     postFiles: function (request, response, next) {
         var name = request.body.name;
         var apiURL;
@@ -70,7 +94,7 @@ module.exports = {
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
         if ((!modelLines.includes('"renders":') ||
-            !modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) &&
+                !modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) &&
             !modelLines.includes('"type":')) {
             console.log('WARNING: Model must include "renders": and "default": "' + apiURL + '?id=' + name + '" or "type":');
             return response.status(400);
@@ -120,7 +144,7 @@ module.exports = {
 
         shell.sed('-i', '</html>', '<script type="text/javascript" src="app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath);
         shell.sed('-i', '</html>', '<script type="text/javascript" src="../app/states/renders/' + name + '/' + name + '.js"></script>\n</html>', indexPath2);
-        
+
         response.sendStatus(201);
         response.end();
     },

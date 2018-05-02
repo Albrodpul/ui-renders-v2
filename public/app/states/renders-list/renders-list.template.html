@@ -81,25 +81,25 @@
     </thead>
     <tbody>
         <tr class="white z-depth-0" ng-repeat="render in renders">
-            <td class="center">{{render.id}}</td>
+            <td class="center">{{render[0]}}</td>
             <td class="center">
-                <a ng-click="downloadModel(render.id)">
-                    <div style="width: 210px;word-wrap: break-word;">{{render.sampleModel}}</div>
+                <a ng-click="downloadModel(render[0])">
+                    <div style="width: 210px;word-wrap: break-word;">{{render[1]}}</div>
                 </a>
             </td>
             <td class="center">
-                <a ng-click="downloadView(render.id)">
-                    <div style="width: 210px;word-wrap: break-word;">{{render.view}}</div>
+                <a ng-click="downloadView(render[0])">
+                    <div style="width: 210px;word-wrap: break-word;">{{render[2]}}</div>
                 </a>
             </td>
             <td class="center">
-                <a ng-click="downloadCtrl(render.id)">
-                    <div style="width: 210px;word-wrap: break-word;">{{render.ctrl}}</div>
+                <a ng-click="downloadCtrl(render[0])">
+                    <div style="width: 210px;word-wrap: break-word;">{{render[3]}}</div>
                 </a>
             </td>
             <td class="center">
-                <button tooltipped class="btn-floating btn-large waves-effect waves-light #f44336 red" ng-click="delete(render.id)" data-position="top"
-                    data-delay="50" data-tooltip="Borrar {{render.id}}!">
+                <button tooltipped class="btn-floating btn-large waves-effect waves-light #f44336 red" ng-click="delete(render[0])" data-position="top"
+                    data-delay="50" data-tooltip="Borrar {{render[0]}}!">
                     <i class="material-icons">delete</i>
                 </button>
             </td>

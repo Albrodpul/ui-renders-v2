@@ -9,18 +9,32 @@ angular
             var uiURL;
             var hostname = window.location.hostname;
             if (hostname == "localhost") {
-                  apiURL = 'http://localhost:8080/api/v1/renders';
+                  apiURL = 'http://localhost:8800/getFiles';
                   uiURL = 'http://localhost:8800/app/states/renders';
             } else {
-                  apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
-                  uiURL = "https://ui-renders.herokuapp.com/app/states/renders";
+                  apiURL = "https://ui-renders-v2.herokuapp.com/getFiles";
+                  uiURL = "https://ui-renders-v2.herokuapp.com/app/states/renders";
             }
             var deleteURL = '/deleteFiles';
 
             var refresh = function () {
                   $http.get(apiURL)
                         .then(function (response) {
-                              $scope.renders = response.data;
+                              var renders = [];
+                              var data = response.data;
+                              angular.forEach(data, function (value, key) {
+                                    var aux = [];
+                                    var id = value[0];
+                                    var sampleModel = uiURL + "/" + value[1] + "/" + value[1] + ".json";
+                                    var view = uiURL + "/" + value[2] + "/" + value[2] + ".ang";
+                                    var ctrl = uiURL + "/" + value[3] + "/" + value[3] + ".ctl";
+                                    aux.push(id);
+                                    aux.push(sampleModel);
+                                    aux.push(view);
+                                    aux.push(ctrl);
+                                    renders.push(aux);
+                              });
+                              $scope.renders = renders;
                         });
             }
 
@@ -72,22 +86,6 @@ angular
                                     $scope.error = modelFile.name + ' must include "renders": and "default": "' + dbURL + '" or "type":. Download and look example.json';
                                     $scope.$apply();
                               } else {
-                                    var line = lines.split(",");
-                                    var flag = -1;
-                                    for (var i = 0; i < line.length; i++) {
-                                          if (line[i].includes('"type":')) {
-                                                flag = i;
-                                                break;
-                                          }
-                                    }
-                                    if (flag != -1) {
-                                          var current = line[flag].split('"');
-                                          var type = current[3];
-                                          var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"' + type + '"}';
-                                    } else {
-                                          var data = '{"id":"' + name + '", "sampleModel":"' + folderURL + "/" + modelFile.name + '","view":"' + folderURL + "/" + viewFile.name + '","ctrl":"' + folderURL + "/" + ctrlFile.name + '","type":"ng"}';
-                                    }
-                                    console.log(data);
                                     const reader = new FileReader();
                                     reader.onload = () => {
                                           let text = reader.result;
@@ -103,16 +101,6 @@ angular
                                                 $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data;. Download and look example.ctl";
                                                 $scope.$apply();
                                           } else {
-                                                $http
-                                                      .post(apiURL, data)
-                                                      .then(function (response) {
-                                                            $scope.error = "";
-                                                            $state.reload();
-                                                      }, function (err) {
-                                                            if (err.status != 201) {
-                                                                  $scope.error = "This render already exists. If you want to upload it again, you must delete it first";
-                                                            }
-                                                      });
                                                 var fd = new FormData();
                                                 fd.append('name', name);
                                                 fd.append('modelFile', modelFile);
@@ -123,7 +111,9 @@ angular
                                                       headers: {
                                                             'Content-Type': undefined
                                                       }
-                                                }).then(function (response) {});
+                                                }).then(function (response) {
+                                                      $state.reload();
+                                                });
                                           }
                                     };
                                     reader.readAsText(ctrlFile);
@@ -134,11 +124,8 @@ angular
             };
 
             $scope.downloadExampleModel = function () {
-                  var url = apiURL + '?id=example';
                   var jsonContent = '{ \r\n';
-                  jsonContent += '  "renders": {\r\n';
-                  jsonContent += '        "default": "' + url + '"\r\n';
-                  jsonContent += '   },\r\n';
+                  jsonContent += '  "type": "ng",\r\n';
                   jsonContent += '  "data": {\r\n';
                   jsonContent += '        "example":"Example working!",\r\n';
                   jsonContent += '        "example2":"Example is working perfectly!"\r\n';
@@ -270,12 +257,9 @@ angular
             $scope.delete = function (id) {
                   var deleteId = window.confirm("¿Está seguro que desea borrar " + id + "?");
                   if (deleteId) {
-                        $http.delete(apiURL + "/" + id)
+                        $http.delete(deleteURL + "/" + id)
                               .then(function (response) {
-                                    $http.delete(deleteURL + "/" + id)
-                                          .then(function (response) {
-                                                $state.reload();
-                                          });
+                                    $state.reload();
                               });
                   }
             }

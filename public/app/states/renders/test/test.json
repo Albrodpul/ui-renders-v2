@@ -1,7 +1,4 @@
 {
-      "renders": {
-            "default": "https://api-renders.herokuapp.com/api/v1/renders?id=test"
-      },
       "data": {
             "test": "Works!",
             "test2": "This is working!",

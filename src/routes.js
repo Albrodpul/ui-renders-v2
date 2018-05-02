@@ -14,5 +14,6 @@ router.get('/callback', function (req, res) {
     res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
 
+router.get("/getFiles",renders.getFiles);
 router.post("/uploadFiles",renders.postFiles);
 router.delete("/deleteFiles/:id",renders.deleteFiles);
