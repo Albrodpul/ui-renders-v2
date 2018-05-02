@@ -12,8 +12,8 @@ angular
                   apiURL = 'http://localhost:8800/getFiles';
                   uiURL = 'http://localhost:8800/app/states/renders';
             } else {
-                  apiURL = "https://ui-renders.herokuapp.com/getFiles";
-                  uiURL = "https://ui-renders.herokuapp.com/app/states/renders";
+                  apiURL = "https://ui-renders-v2.herokuapp.com/getFiles";
+                  uiURL = "https://ui-renders-v2.herokuapp.com/app/states/renders";
             }
 
             $state.go("renderizer");
