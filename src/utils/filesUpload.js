@@ -35,10 +35,8 @@ module.exports = {
         var uiURL;
         var hostname = request.get('host').split(':')[0];
         if (hostname == "localhost") {
-            apiURL = 'http://localhost:8080/api/v1/renders';
             uiURL = 'http://localhost:8800/app/states/renders';
         } else {
-            apiURL = "https://api-renders.herokuapp.com/api/v1/renders";
             uiURL = "https://" + hostname + "/app/states/renders";
         }
         if (!name) {
@@ -93,12 +91,6 @@ module.exports = {
         var indexPath2 = './public/renderizer-ui/index.html';
         var modelLines = model.data.toString();
         var ctrlLines = ctrl.data.toString();
-        if ((!modelLines.includes('"renders":') ||
-                !modelLines.includes('"default": "' + apiURL + '?id=' + name + '"')) &&
-            !modelLines.includes('"type":')) {
-            console.log('WARNING: Model must include "renders": and "default": "' + apiURL + '?id=' + name + '" or "type":');
-            return response.status(400);
-        }
         if (!ctrlLines.includes(".module('renderApp')")) {
             console.log("WARNING: Controller must include .module('renderApp')");
             return response.status(400);

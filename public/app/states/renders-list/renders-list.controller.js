@@ -75,51 +75,37 @@ angular
                         $scope.error = "Controller file extension .ctl";
                   } else {
                         var folderURL = uiURL + '/' + name;
-                        var dbURL = apiURL + '?id=' + name;
                         const reader = new FileReader();
                         reader.onload = () => {
                               let text = reader.result;
                               var lines = text.split("\n").toString();
-                              if ((!lines.includes('"renders":') ||
-                                          !lines.includes('"default": "' + dbURL + '"')) &&
-                                    !lines.includes('"type":')) {
-                                    $scope.error = modelFile.name + ' must include "renders": and "default": "' + dbURL + '" or "type":. Download and look example.json';
+                              if (!lines.includes(".module('renderApp')")) {
+                                    $scope.error = ctrlFile.name + " must include .module('renderApp'). Download and look example.ctl";
+                                    $scope.$apply();
+                              } else if (!lines.includes(".controller('" + name + "',")) {
+                                    $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
+                                    $scope.$apply();
+                              } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") ||
+                                    !lines.includes("$scope.model = response.data;")) {
+                                    $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data;. Download and look example.ctl";
                                     $scope.$apply();
                               } else {
-                                    const reader = new FileReader();
-                                    reader.onload = () => {
-                                          let text = reader.result;
-                                          var lines = text.split("\n").toString();
-                                          if (!lines.includes(".module('renderApp')")) {
-                                                $scope.error = ctrlFile.name + " must include .module('renderApp'). Download and look example.ctl";
-                                                $scope.$apply();
-                                          } else if (!lines.includes(".controller('" + name + "',")) {
-                                                $scope.error = ctrlFile.name + " must include .controller('" + name + "', function.... Download and look example.ctl";
-                                                $scope.$apply();
-                                          } else if (!lines.includes("$http.get('" + folderURL + "/" + name + ".json'") ||
-                                                !lines.includes("$scope.model = response.data;")) {
-                                                $scope.error = ctrlFile.name + " must include $http.get('" + folderURL + "/" + name + ".json') and $scope.model = response.data;. Download and look example.ctl";
-                                                $scope.$apply();
-                                          } else {
-                                                var fd = new FormData();
-                                                fd.append('name', name);
-                                                fd.append('modelFile', modelFile);
-                                                fd.append('viewFile', viewFile);
-                                                fd.append('ctrlFile', ctrlFile);
-                                                $http.post("/uploadFiles", fd, {
-                                                      transformRequest: angular.identity,
-                                                      headers: {
-                                                            'Content-Type': undefined
-                                                      }
-                                                }).then(function (response) {
-                                                      $state.reload();
-                                                });
+                                    var fd = new FormData();
+                                    fd.append('name', name);
+                                    fd.append('modelFile', modelFile);
+                                    fd.append('viewFile', viewFile);
+                                    fd.append('ctrlFile', ctrlFile);
+                                    $http.post("/uploadFiles", fd, {
+                                          transformRequest: angular.identity,
+                                          headers: {
+                                                'Content-Type': undefined
                                           }
-                                    };
-                                    reader.readAsText(ctrlFile);
+                                    }).then(function (response) {
+                                          $state.reload();
+                                    });
                               }
                         };
-                        reader.readAsText(modelFile);
+                        reader.readAsText(ctrlFile);
                   }
             };
 
