@@ -3,16 +3,22 @@
 <!--Navbar-->
 <div class="row">
   <nav>
-    <div class="nav-wrapper #90caf9 blue lighten-3">
+    <div class="nav-wrapper #f5f5f5 grey lighten-4">
+      <div ng-if="vm.auth.isAuthenticated()">
+        <a href="#" data-activates="slide-out" class="button-collapse show-on-large">
+          <i class="material-icons black-text" style="margin-top:2px;">menu</i>
+        </a>
+      </div>
       <div class="col s3">
-        <a ui-sref="home" class="brand-logo">
-          <i class="material-icons">cloud</i>ARenderizer</a>
+        <a ui-sref="home" class="brand-logo" ng-click="deleteRoot()">
+          <img src="../../../img/appLogoBig.png" style="width:110px; height: 16px;">
+        </a>
       </div>
       <div class="col s1 offset-s7">
         <ul id="nav-mobile">
           <li>
             <a class="btn-margin" ng-if="!vm.auth.isAuthenticated()" ng-click="vm.auth.login()">
-              Sign in
+              <span style="color: black;">Sign in</span>
             </a>
           </li>
           <li>
@@ -38,3 +44,4 @@
     </a>
   </li>
 </ul>
+
