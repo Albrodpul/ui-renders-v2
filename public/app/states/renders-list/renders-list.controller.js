@@ -101,7 +101,15 @@ angular
                                                 'Content-Type': undefined
                                           }
                                     }).then(function (response) {
-                                          $state.reload();
+                                          (function () {
+                                                if (window.localStorage) {
+                                                      if (!localStorage.getItem('firstLoad')) {
+                                                            localStorage['firstLoad'] = true;
+                                                            window.location.reload();
+                                                      } else
+                                                            localStorage.removeItem('firstLoad');
+                                                }
+                                          })();
                                     });
                               }
                         };

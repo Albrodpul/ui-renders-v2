@@ -1,4 +1,4 @@
-(function () {
+(function() {
   'use strict';
 
   angular
@@ -12,37 +12,30 @@
         }
       });
 
-  navbarController.$inject = ['$scope', 'authService', '$rootScope'];
+  navbarController.$inject = ['$scope', 'authService'];
 
-  function navbarController($scope, authService, $rootScope) {
+  function navbarController($scope, authService) {
     var vm = this;
     vm.auth = authService;
     vm.profile;
-
+    
     if (authService.isAuthenticated()) {
       console.log()
       if (authService.getCachedProfile()) {
         vm.profile = authService.getCachedProfile();
-
-      } else {
-        authService.getProfile(function (err, profile) {
+        
+      }
+      else {
+        authService.getProfile(function(err, profile) {
           vm.profile = profile;
           $scope.$apply();
-
+          
         });
       }
-    } else {
-
-
     }
+    else {
 
-    $scope.deleteRoot = function () {
-      $rootScope.render = false;
-      $rootScope.id = null;
-      $rootScope.model = null;
-      $rootScope.view = null;
-      $rootScope.ctrl = null;
-      $rootScope.advancedCheck = false;
+
     }
 
   }

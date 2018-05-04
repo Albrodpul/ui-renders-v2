@@ -2,7 +2,7 @@
 
 angular
       .module("renderApp")
-      .controller("renderizer", function ($scope, $http, $state) {
+      .controller("renderizer", function ($scope, $http, $state, $stateParams) {
             console.log("Renderizer Controller initialized");
 
             var apiURL;
@@ -17,15 +17,6 @@ angular
             }
 
             $state.go("renderizer");
-            (function () {
-                  if (window.localStorage) {
-                        if (!localStorage.getItem('firstLoad')) {
-                              localStorage['firstLoad'] = true;
-                              window.location.reload();
-                        } else
-                              localStorage.removeItem('firstLoad');
-                  }
-            })();
 
             $http.get(apiURL)
                   .then(function (response) {
@@ -53,6 +44,54 @@ angular
                   }
             }
 
+            var modelAux;
+            var viewAux;
+            var ctrlAux;
+            if ($stateParams.model && $stateParams.view && $stateParams.ctrl) {
+                  modelAux = (($stateParams.model).split('/')[7]).split('.')[0];
+                  viewAux = (($stateParams.view).split('/')[7]).split('.')[0];
+                  ctrlAux = (($stateParams.ctrl).split('/')[7]).split('.')[0];
+            } else {
+                  modelAux = null;
+                  viewAux = null;
+                  ctrlAux = null;
+            }
+            if (!modelAux && !viewAux && !ctrlAux) {
+                  $state.go("renderizer");
+                  $scope.id = null;
+                  $scope.model = null;
+                  $scope.view = null;
+                  $scope.ctrl = null;
+            } else {
+                  $http.get(apiURL)
+                        .then(function (response) {
+                              var data = response.data.filter(i => i[1] == modelAux);
+                              var id = data[0][0];
+                              var model = uiURL + "/" + data[0][1] + "/" + data[0][1] + ".json";
+                              var view = uiURL + "/" + data[0][2] + "/" + data[0][2] + ".ang";
+                              var ctrl = uiURL + "/" + data[0][3] + "/" + data[0][3] + ".ctl";
+                              $scope.error = "";
+                              (function () {
+                                    if (window.localStorage) {
+                                          if (!localStorage.getItem('firstLoad')) {
+                                                localStorage['firstLoad'] = true;
+                                                window.location.reload();
+                                          } else
+                                                localStorage.removeItem('firstLoad');
+                                    }
+                              })();
+                              $state.go("renderizer.render", {
+                                    "model": model,
+                                    "view": view,
+                                    "ctrl": ctrl
+                              });
+                              $scope.id = id;
+                              $scope.model = model;
+                              $scope.view = view;
+                              $scope.ctrl = ctrl;
+                        });
+            }
+
             $scope.checkState = function (id, model, view, ctrl) {
                   if (!id && !model && !view && !ctrl) {
                         $state.go("renderizer");
@@ -65,7 +104,9 @@ angular
                                     var ctrl = uiURL + "/" + data[0][3] + "/" + data[0][3] + ".ctl";
                                     $scope.error = "";
                                     $state.go("renderizer.render", {
-                                          "model": model, "view": view, "ctrl": ctrl
+                                          "model": model,
+                                          "view": view,
+                                          "ctrl": ctrl
                                     });
                               }, function (err) {
                                     $scope.error = "Render not found";
