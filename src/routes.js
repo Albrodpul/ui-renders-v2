@@ -37,29 +37,44 @@ router.get("/render", function (req, res) {
         res.send("<html ng-app='renderApp'>" +
             "<head>" +
             "<title>ARenderizer</title>" +
-            "<link rel='stylesheet' href='bower_components/materialize/dist/css/materialize.min.css'>"+
+            "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>"+
             "<script type='text/javascript' src='bower_components/jquery/dist/jquery.min.js'></script>" +
-            "<script type='text/javascript' src='bower_components/materialize/dist/js/materialize.min.js'></script>" +
+            "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>"+
             "<script type='text/javascript' src='bower_components/angular/angular.js'></script>" +
             "<script type='text/javascript' src='bower_components/angular-route/angular-route.js'></script>" +
             "<script type='text/javascript' src='bower_components/angular-ui-router/release/angular-ui-router.js'></script>" +
-            "<script type='text/javascript' src='bower_components/angular-materialize/src/angular-materialize.js'></script>" +
             "<script type='text/javascript' src='bower_components/angular-route/angular-route.min.js'></script>" +
             "<script type='text/javascript' src='bower_components/angular-sanitize/angular-sanitize.min.js'></script>" +
             "</head>" +
-            "<body ng-controller='renderController'>" +
-            "<div id='my-element'></div>\n\r"+
+            "<body class='container' ng-controller='renderController'>" +
+            "<div id='my-element'></div>\n\r" +
             "<script type='text/javascript'>" +
             "'use strict';\n\r" +
             "angular.module('renderApp', [\n" +
             "'ui.router',\n" +
-            "'ngSanitize'\n"+
+            "'ngSanitize'\n" +
             "]);\n\r " +
-            "angular.module('renderApp').config(['$sceDelegateProvider',\n"+
-            "function ($sceDelegateProvider) {\n\r"+
-            "$sceDelegateProvider.resourceUrlWhitelist(['**']);\n\r"+
-            "console.log('App Initialized');\r\n"+
-            "}]);\n\r"+
+            "angular.module('renderApp').config(['$sceDelegateProvider',\n" +
+            "function ($sceDelegateProvider) {\n\r" +
+            "$sceDelegateProvider.resourceUrlWhitelist(['**']);\n\r" +
+            "console.log('App Initialized');\r\n" +
+            "}]);\n\r" +
+            "angular.module('renderApp').directive('contenteditable', function () {\n" +
+            "return {\n" +
+            "require: 'ngModel',\n" +
+            "link: function (scope, element, attrs, ctrl) {\n" +
+            "element.bind('blur', function () {\n" +
+            "scope.$apply(function () {\n" +
+            "ctrl.$setViewValue(element.html());\n" +
+            "});\n" +
+            "});\n" +
+            "ctrl.$render = function () {\n" +
+            "element.html(ctrl.$viewValue);\n" +
+            "};\n" +
+            "ctrl.$render();\n" +
+            "}\n" +
+            "};\n" +
+            "});\n\r" +
             "angular.module('renderApp').controller('renderController',function($scope, $http, $state, $stateParams, $templateRequest, $sce, $compile, $q){\n\r" +
             "console.log('Render Controller Initialized');\n\r" +
             "function json() {\n" +
@@ -73,7 +88,7 @@ router.get("/render", function (req, res) {
             "$q((resolve, reject) => {\n" +
             "   json().then((data) => {\n" +
             "       $scope.model = data.data;\n" +
-            "});\n\r" +            
+            "});\n\r" +
             body +
             "\n\r" +
             "});\n\r" +
