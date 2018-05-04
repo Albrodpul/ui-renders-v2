@@ -1,3 +1,4 @@
+<script type="text/javascript" src="../../../bower_components\materialize\dist\js\materialize.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.button-collapse').sideNav({
@@ -8,7 +9,7 @@
         });
         // START OPEN
         $('.button-collapse').sideNav('hide');
-        $('#add').modal();
+
 
         $("#filesystem").resizable();
         $('#filesystem').resize(function () {
@@ -62,8 +63,10 @@
     }
 </style>
 <br />
-<ul id="slide-out" class="side-nav grey darken-2">
-    <a class="btn btn-large waves-effect #2196f3 blue right" style="box-shadow: 0 0 0 0;" onclick="$('#add').modal('open');">
+
+<!--Side Nav-->
+<ul id="slide-out" class="bg-dark">
+    <a class="btn btn-large waves-effect #2196f3 blue right" style="box-shadow: 0 0 0 0;">
         <i class="material-icons">add</i>
     </a>
     <br />
@@ -75,6 +78,8 @@
         </li>
     </ul>
 </ul>
+
+<!--Page Content-->
 <div id="container" class="container" ng-show="$root.render">
     <div id="filesystem">
         <span style="margin-left:10%;">
@@ -115,7 +120,7 @@
     </div>
 </div>
 
-
+<!--Modal to create renders-->
 <div id="add" class="modal" style="width:80%;">
     <div class="modal-content">
         <h4>Create new render</h4>
