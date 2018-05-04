@@ -2,7 +2,7 @@
 
 angular
       .module("renderApp")
-      .controller("renderizer", function ($scope, $http, $stateParams, $templateRequest, $sce, $compile, $q) {
+      .controller("renderizer", function ($scope, $http, $state, $stateParams, $templateRequest, $sce, $compile, $q) {
             console.log("Renderizer Controller initialized");
 
             var modelAux;
@@ -14,13 +14,10 @@ angular
                   modelAux = $stateParams.model;
                   viewAux = $stateParams.view;
                   ctrlAux = $stateParams.ctrl;
-                  console.log($stateParams.model);
 
                   function json() {
                         return $http.get(modelAux);
                   }
-
-                  $scope.url=ctrlAux;
 
                   var templateUrl = $sce.getTrustedResourceUrl(viewAux);
 
@@ -41,7 +38,7 @@ angular
                         // An error has occurred here
                   });
             } else {
-                  modelAux = null;
+                  $state.go("home");
             }
 
 
