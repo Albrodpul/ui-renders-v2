@@ -5,11 +5,6 @@ module('renderApp').
 config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider', '$sceDelegateProvider',
   function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider, $sceDelegateProvider) {
 
-    $sceDelegateProvider.resourceUrlWhitelist(['**']);
-
-    var initInjector = angular.injector(['ng']);
-    var $http = initInjector.get('$http');
-
     $stateProvider
       .state('home', {
         url: '/',
@@ -28,16 +23,6 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         controller: 'CallbackController',
         templateUrl: 'app/states/callback/callback.html',
         controllerAs: 'vm'
-      })
-      .state('renders-list', {
-        url: '/renders-list',
-        controller: 'rendersList',
-        templateUrl: 'app/states/renders-list/renders-list.template.html'
-      })
-      .state('renderizer', {
-        url: '/renderizer?model&view&ctrl',
-        controller: 'renderizer',
-        templateUrl: 'app/states/renderizer/renderizer.template.html'
       })
       .state('about', {
         url: '/about',

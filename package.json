@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Albrodpul/ui-renders-v2#readme",
   "dependencies": {
+    "bluebird": "^3.5.1",
     "body-parser": "^1.17.2",
     "bower": "^1.8.2",
     "cors": "^2.8.4",
@@ -24,9 +25,10 @@
     "express-fileupload": "^0.4.0",
     "fs-extra": "^5.0.0",
     "helmet": "^3.9.0",
+    "http": "0.0.0",
     "path": "^0.12.7",
     "protractor": "^5.3.0",
-    "request": "^2.81.0",
+    "request": "^2.85.0",
     "shelljs": "^0.8.1"
   }
 }

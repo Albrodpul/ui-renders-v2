@@ -1,7 +1,0 @@
-<h5>Test2 Template</h5>
-
-{{model.data.prueba1}}
-<br />
-{{something}}
-<br />
-<button class="btn" ng-click="generate()">Generate</button>
