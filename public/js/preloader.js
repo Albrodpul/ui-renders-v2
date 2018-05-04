@@ -1,10 +1,8 @@
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     console.log("preloader working");
 
-    $('.preloader-background').delay(1700).fadeOut('slow');
-
-    $('.preloader-wrapper')
-      .delay(1700)
-      .fadeOut();
+    setTimeout(function () {
+      $('#preloader').fadeOut();
+      $('.preloader_img').delay(150).fadeOut('slow');
+    }, 1000);
   });
- 

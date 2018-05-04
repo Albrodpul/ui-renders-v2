@@ -5,7 +5,8 @@
   <title>ARenderizer</title>
 
   <!-- STYLESHEETS -->
-  <link rel="stylesheet" href="bower_components/materialize/dist/css/materialize.min.css">
+  <link rel="stylesheet" href="bower_components\bootstrap\dist\css\bootstrap.min.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/index.css" rel="stylesheet">
   <link rel="stylesheet" href="app/states/profile/profile.stylesheet.css">
@@ -15,15 +16,18 @@
 
   <!-- BOWER COMPONENTS -->
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="bower_components/materialize/dist/js/materialize.min.js"></script>
+  <script type="text/javascript" src="bower_components\bootstrap\dist\js\bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
   <script type="text/javascript" src="bower_components/angular/angular.js"></script>
   <script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
   <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script type="text/javascript" src="bower_components/angular-materialize/src/angular-materialize.js"></script>
   <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
   <script type="text/javascript" src="bower_components/auth0.js/build/auth0.js"></script>
   <script type="text/javascript" src="bower_components/angular-auth0/dist/angular-auth0.js"></script>
   <script type="text/javascript" src="bower_components/file-saver/FileSaver.js"></script>
+  <script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="bower_components\jszip\dist\jszip.min.js"></script>
 
   <!-- CONFIG VARIABLES -->
   <script type="text/javascript" src="../js/auth0-variables.js"></script>
@@ -52,56 +56,27 @@
 
 </head>
 
-<body class="container #e3f2fd blue lighten-5">
+<body class="container-fluid">
   <!--Preloader code-->
-  <div class="preloader-background">
-    <div class="preloader-wrapper big active">
-      <div class="spinner-layer spinner-blue-only">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div>
-        <div class="gap-patch">
-          <div class="circle"></div>
-        </div>
-        <div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-    </div>
+  <div id="preloader">
+    <div class="preloader_img"></div>
   </div>
   <navbar></navbar>
-  <!--<ui-view></ui-view>-->
   <ui-view ng-if="vm.auth.isAuthenticated()"></ui-view>
-  <div ng-if="!vm.auth.isAuthenticated()">
+  <div style="margin-top:2%;" class="container" ng-if="!vm.auth.isAuthenticated()">
     <br />
-    <h4>Sign in to access to the service</h4>
+    <h2>Sign in to access to the service</h2>
     <br />
-    <button class="waves-effect waves-light btn #90caf9 blue lighten-3" ng-click="vm.auth.login()">Log In</button>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
+    <button class="btn btn-primary" ng-click="vm.auth.login()">Login
+      <i class="material-icons" style="vertical-align: bottom !important; margin-left:3px;">send</i>
+    </button>
   </div>
-  <footer class="page-footer #e3f2fd blue lighten-5">
-    <div class="footer-copyright #90caf9 blue lighten-3">
-      <div class="container footer-container">
-        <span class="white-text text-lighten-4">© 2017-2018 ARenderizer. All rights reserved.</span>
-        <a class="white-text text-lighten-4 right" ui-sref="about">About</a>
-      </div>
+  <footer class="footer">
+    <div class="container d-flex justify-content-between">
+      <span style="color: rgba(0, 0, 0, 0.5);">Copyright © 2018. All rights reserved.</span>
+      <a href="http://www.isa.us.es/" target="_blank">
+        <img style="width: 106px; height: 24px;" src="./img/isaLogoSmall.png" alt="ISA">
+      </a>
     </div>
   </footer>
 </body>

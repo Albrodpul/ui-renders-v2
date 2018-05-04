@@ -15,6 +15,19 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         templateUrl: 'app/states/home/home.template.html',
         controllerAs: 'vm'
       })
+      .state('home.render', {
+        url: 'render?model&view&ctrl',
+        controllerProvider: function ($stateParams) {
+          var ctrl = ($stateParams.ctrl.split('/')[7]).split('.')[0];
+          return ctrl;
+        },
+        templateProvider: function ($templateRequest, $stateParams) {
+          var model = ($stateParams.model.split('/')[7]).split('.')[0];
+          var view = $stateParams.view.split('/')[7];
+          var pathToTemplate = 'app/states/renders/' + model + '/' + view;
+          return $templateRequest(pathToTemplate);
+        }
+      })      
       .state('profile', {
         url: '/profile',
         controller: 'ProfileController',
@@ -27,34 +40,7 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         templateUrl: 'app/states/callback/callback.html',
         controllerAs: 'vm'
       })
-      .state('renders-list', {
-        url: '/renders-list',
-        controller: 'rendersList',
-        templateUrl: 'app/states/renders-list/renders-list.template.html'
-      })
-      .state('renderizer', {
-        url: '/renderizer',
-        controller: 'renderizer',
-        templateUrl: 'app/states/renderizer/renderizer.template.html'
-      })
-      .state('renderizer.render', {
-        url: '?model&view&ctrl',
-        controllerProvider: function ($stateParams) {
-          var ctrl = ($stateParams.ctrl.split('/')[7]).split('.')[0];
-          return ctrl;
-        },
-        templateProvider: function ($templateRequest, $stateParams) {
-          var model = ($stateParams.model.split('/')[7]).split('.')[0];
-          var view = $stateParams.view.split('/')[7];
-          var pathToTemplate = 'app/states/renders/' + model + '/' + view;
-          return $templateRequest(pathToTemplate);
-        }
-      })
-      .state('about', {
-        url: '/about',
-        controller: 'about',
-        templateUrl: 'app/states/about/about.template.html'
-      })
+
 
 
     $urlRouterProvider.otherwise('/');
