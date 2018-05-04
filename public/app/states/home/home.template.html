@@ -1,14 +1,19 @@
-<script type="text/javascript" src="../../../bower_components\materialize\dist\js\materialize.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('.button-collapse').sideNav({
-            menuWidth: 300, // Default is 300
-            edge: 'left', // Choose the horizontal origin
-            closeOnClick: false, // Closes side-nav on <a> clicks, useful for Angular/Meteor
-            draggable: true // Choose whether you can drag to open on touch screens
+        $(document).ready(function () {
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').fadeOut();
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').fadeIn();
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
         });
-        // START OPEN
-        $('.button-collapse').sideNav('hide');
 
 
         $("#filesystem").resizable();
@@ -61,11 +66,56 @@
     .grey-text:hover {
         color: #616161 !important;
     }
+
+    #sidebar {
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: -250px;
+        height: 100vh;
+        z-index: 999;
+        background: #333333;
+        color: #fff;
+        transition: all 0.3s;
+        overflow-y: scroll;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    #sidebar.active {
+        left: 0;
+    }
+
+    .overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        cursor: pointer;
+    }
 </style>
 <br />
+<div class="wrapper" class="hidden">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar">
+        <ul class="list-group list-group-flush" ng-repeat="render in renders">
+            <li class="list-group-item" style="background-color: #333333;" ng-mouseover="arrow=true" ng-mouseleave="arrow=false" ng-init="arrow=false"
+                ng-click="checkState(render[0])"><span style="margin-top:-10px;" class="text-right">{{render[0]}}</span>
+                <i class="material-icons" style="vertical-align: middle !important;" ng-show="arrow">keyboard_arrow_right</i>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="overlay"></div>
 
 <!--Side Nav-->
-<ul id="slide-out" class="bg-dark">
+<!--<ul id="slide-out" class="bg-dark" style="width: 30px;">
     <a class="btn btn-large waves-effect #2196f3 blue right" style="box-shadow: 0 0 0 0;">
         <i class="material-icons">add</i>
     </a>
@@ -77,7 +127,7 @@
             <i class="material-icons right" style="vertical-align: middle !important; margin-right: 10%; margin-top:13px;" ng-show="arrow">keyboard_arrow_right</i>
         </li>
     </ul>
-</ul>
+</ul>-->
 
 <!--Page Content-->
 <div id="container" class="container" ng-show="$root.render">
