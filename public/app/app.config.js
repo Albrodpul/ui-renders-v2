@@ -2,8 +2,10 @@
 
 angular.
 module('renderApp').
-config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider',
-  function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider) {
+config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider', '$sceDelegateProvider',
+  function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider, $sceDelegateProvider) {
+
+    $sceDelegateProvider.resourceUrlWhitelist(['**']);
 
     var initInjector = angular.injector(['ng']);
     var $http = initInjector.get('$http');
@@ -33,22 +35,9 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         templateUrl: 'app/states/renders-list/renders-list.template.html'
       })
       .state('renderizer', {
-        url: '/renderizer',
+        url: '/renderizer?model&view&ctrl',
         controller: 'renderizer',
         templateUrl: 'app/states/renderizer/renderizer.template.html'
-      })
-      .state('renderizer.render', {
-        url: '?model&view&ctrl',
-        controllerProvider: function ($stateParams) {
-          var ctrl = ($stateParams.ctrl.split('/')[7]).split('.')[0];
-          return ctrl;
-        },
-        templateProvider: function ($templateRequest, $stateParams) {
-          var model = ($stateParams.model.split('/')[7]).split('.')[0];
-          var view = $stateParams.view.split('/')[7];
-          var pathToTemplate = 'app/states/renders/' + model + '/' + view;
-          return $templateRequest(pathToTemplate);
-        }
       })
       .state('about', {
         url: '/about',
