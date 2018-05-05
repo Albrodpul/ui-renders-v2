@@ -2,8 +2,8 @@
 
 angular.
 module('renderApp').
-config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider', '$sceDelegateProvider',
-  function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider, $sceDelegateProvider) {
+config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAuth0Provider',
+  function ($stateProvider, $locationProvider, $urlRouterProvider, angularAuth0Provider) {
 
     $stateProvider
       .state('home', {
@@ -23,11 +23,6 @@ config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'angularAut
         controller: 'CallbackController',
         templateUrl: 'app/states/callback/callback.html',
         controllerAs: 'vm'
-      })
-      .state('about', {
-        url: '/about',
-        controller: 'about',
-        templateUrl: 'app/states/about/about.template.html'
       })
 
 
