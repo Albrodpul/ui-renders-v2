@@ -88,8 +88,8 @@ router.get("/render", function (req, res) {
             "$q((resolve, reject) => {\n" +
             "   json().then((data) => {\n" +
             "       $scope.model = data.data;\n" +
-            "});\n\r" +
             body +
+            "});\n\r" +
             "\n\r" +
             "});\n\r" +
             "});" +
