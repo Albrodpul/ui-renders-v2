@@ -1,3 +1,28 @@
+.navbar{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  height: 60px;
+}
+
 .nav-item:hover{
   background-color:#f8f9fa!important;
+}
+
+.sidebarCollapse{
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  height: 60px;
+}
+
+.userInfo{
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  height: 60px;
+}
+
+.avatar{
+  width: 50px;
+  margin-left:10px;
+  margin-top:4px;
+}
+
+.dropdown-toggle::after {
+  display:none;
 }
