@@ -59,6 +59,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {function redirect(url) {
+	  global.window.location = url;
+	}
+	
+	function getDocument() {
+	  return global.window.document;
+	}
+	
+	function getWindow() {
+	  return global.window;
+	}
+	
+	module.exports = {
+	  redirect: redirect,
+	  getDocument: getDocument,
+	  getWindow: getWindow
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint-disable no-param-reassign */
@@ -192,7 +216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (name, context, definition) {
@@ -234,30 +258,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	});
 
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {function redirect(url) {
-	  global.window.location = url;
-	}
-	
-	function getDocument() {
-	  return global.window.document;
-	}
-	
-	function getWindow() {
-	  return global.window;
-	}
-	
-	module.exports = {
-	  redirect: redirect,
-	  getDocument: getDocument,
-	  getWindow: getWindow
-	};
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 4 */
@@ -356,7 +356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(21);
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	
 	function wrapCallback(cb, options) {
 	  options = options || {};
@@ -652,7 +652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports = { raw: '8.10.1' };
+	module.exports = { raw: '8.12.3' };
 
 
 /***/ },
@@ -660,7 +660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint-disable no-param-reassign */
-	var request = __webpack_require__(17);
+	var request = __webpack_require__(18);
 	var base64Url = __webpack_require__(20);
 	var version = __webpack_require__(9);
 	
@@ -1203,6 +1203,71 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var random = __webpack_require__(48);
+	var storage = __webpack_require__(49);
+	
+	var DEFAULT_NAMESPACE = 'com.auth0.auth.';
+	
+	function TransactionManager(options) {
+	  options = options || {};
+	  this.namespace = options.namespace || DEFAULT_NAMESPACE;
+	  this.keyLength = options.keyLength || 32;
+	}
+	
+	TransactionManager.prototype.process = function(options) {
+	  if (!options.responseType) {
+	    throw new Error('responseType is required');
+	  }
+	  var responseTypeIncludesIdToken = options.responseType.indexOf('id_token') !== -1;
+	
+	  var transaction = this.generateTransaction(
+	    options.appState,
+	    options.state,
+	    options.nonce,
+	    responseTypeIncludesIdToken
+	  );
+	  if (!options.state) {
+	    options.state = transaction.state;
+	  }
+	
+	  if (responseTypeIncludesIdToken && !options.nonce) {
+	    options.nonce = transaction.nonce;
+	  }
+	
+	  return options;
+	};
+	
+	TransactionManager.prototype.generateTransaction = function(appState, state, nonce, generateNonce) {
+	  state = state || random.randomString(this.keyLength);
+	  nonce = nonce || (generateNonce ? random.randomString(this.keyLength) : null);
+	
+	  storage.setItem(this.namespace + state, {
+	    nonce: nonce,
+	    appState: appState,
+	    state: state
+	  });
+	
+	  return {
+	    state: state,
+	    nonce: nonce
+	  };
+	};
+	
+	TransactionManager.prototype.getStoredTransaction = function(state) {
+	  var transactionData;
+	
+	  transactionData = storage.getItem(this.namespace + state);
+	  storage.removeItem(this.namespace + state);
+	  return transactionData;
+	};
+	
+	module.exports = TransactionManager;
+
+
+/***/ },
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -1322,10 +1387,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var base64 = __webpack_require__(15);
+	var base64 = __webpack_require__(16);
 	
 	function padding(str) {
 	  var mod = (str.length % 4);
@@ -1399,7 +1464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1416,12 +1481,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  root = this;
 	}
 	
-	var Emitter = __webpack_require__(24);
-	var RequestBase = __webpack_require__(34);
+	var Emitter = __webpack_require__(23);
+	var RequestBase = __webpack_require__(33);
 	var isObject = __webpack_require__(14);
-	var isFunction = __webpack_require__(33);
-	var ResponseBase = __webpack_require__(35);
-	var shouldRetry = __webpack_require__(36);
+	var isFunction = __webpack_require__(32);
+	var ResponseBase = __webpack_require__(34);
+	var shouldRetry = __webpack_require__(35);
 	
 	/**
 	 * Noop.
@@ -2336,333 +2401,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	var WinChan = (function() {
-	  var RELAY_FRAME_NAME = "__winchan_relay_frame";
-	  var CLOSE_CMD = "die";
-	
-	  // a portable addListener implementation
-	  function addListener(w, event, cb) {
-	    if(w.attachEvent) w.attachEvent('on' + event, cb);
-	    else if (w.addEventListener) w.addEventListener(event, cb, false);
-	  }
-	
-	  // a portable removeListener implementation
-	  function removeListener(w, event, cb) {
-	    if(w.detachEvent) w.detachEvent('on' + event, cb);
-	    else if (w.removeEventListener) w.removeEventListener(event, cb, false);
-	  }
-	
-	
-	  // checking for IE8 or above
-	  function isInternetExplorer() {
-	    if (typeof navigator === 'undefined') {
-	      return false;
-	    }
-	
-	    var rv = -1; // Return value assumes failure.
-	    var ua = navigator.userAgent;
-	    if (navigator.appName === 'Microsoft Internet Explorer') {
-	      var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-	      if (re.exec(ua) != null)
-	        rv = parseFloat(RegExp.$1);
-	    }
-	    // IE > 11
-	    else if (ua.indexOf("Trident") > -1) {
-	      var re = new RegExp("rv:([0-9]{2,2}[\.0-9]{0,})");
-	      if (re.exec(ua) !== null) {
-	        rv = parseFloat(RegExp.$1);
-	      }
-	    }
-	
-	    return rv >= 8;
-	  }
-	
-	  // checking Mobile Firefox (Fennec)
-	  function isFennec() {
-	    try {
-	      // We must check for both XUL and Java versions of Fennec.  Both have
-	      // distinct UA strings.
-	      var userAgent = navigator.userAgent;
-	      return (userAgent.indexOf('Fennec/') != -1) ||  // XUL
-	             (userAgent.indexOf('Firefox/') != -1 && userAgent.indexOf('Android') != -1);   // Java
-	    } catch(e) {}
-	    return false;
-	  }
-	
-	  // feature checking to see if this platform is supported at all
-	  function isSupported() {
-	    return (typeof window !== 'undefined' && window.JSON && window.JSON.stringify &&
-	            window.JSON.parse && window.postMessage);
-	  }
-	
-	  // given a URL, extract the origin. Taken from: https://github.com/firebase/firebase-simple-login/blob/d2cb95b9f812d8488bdbfba51c3a7c153ba1a074/js/src/simple-login/transports/WinChan.js#L25-L30
-	  function extractOrigin(url) {
-	    if (!/^https?:\/\//.test(url)) url = window.location.href;
-	    var m = /^(https?:\/\/[\-_a-zA-Z\.0-9:]+)/.exec(url);
-	    if (m) return m[1];
-	    return url;
-	  }
-	
-	  // find the relay iframe in the opener
-	  function findRelay() {
-	    var loc = window.location;
-	    var frames = window.opener.frames;
-	    for (var i = frames.length - 1; i >= 0; i--) {
-	      try {
-	        if (frames[i].location.protocol === window.location.protocol &&
-	            frames[i].location.host === window.location.host &&
-	            frames[i].name === RELAY_FRAME_NAME)
-	        {
-	          return frames[i];
-	        }
-	      } catch(e) { }
-	    }
-	    return;
-	  }
-	
-	  var isIE = isInternetExplorer();
-	
-	  if (isSupported()) {
-	    /*  General flow:
-	     *                  0. user clicks
-	     *  (IE SPECIFIC)   1. caller adds relay iframe (served from trusted domain) to DOM
-	     *                  2. caller opens window (with content from trusted domain)
-	     *                  3. window on opening adds a listener to 'message'
-	     *  (IE SPECIFIC)   4. window on opening finds iframe
-	     *                  5. window checks if iframe is "loaded" - has a 'doPost' function yet
-	     *  (IE SPECIFIC5)  5a. if iframe.doPost exists, window uses it to send ready event to caller
-	     *  (IE SPECIFIC5)  5b. if iframe.doPost doesn't exist, window waits for frame ready
-	     *  (IE SPECIFIC5)  5bi. once ready, window calls iframe.doPost to send ready event
-	     *                  6. caller upon reciept of 'ready', sends args
-	     */
-	    return {
-	      open: function(opts, cb) {
-	        if (!cb) throw "missing required callback argument";
-	
-	        // test required options
-	        var err;
-	        if (!opts.url) err = "missing required 'url' parameter";
-	        if (!opts.relay_url) err = "missing required 'relay_url' parameter";
-	        if (err) setTimeout(function() { cb(err); }, 0);
-	
-	        // supply default options
-	        if (!opts.window_name) opts.window_name = null;
-	        if (!opts.window_features || isFennec()) opts.window_features = undefined;
-	
-	        // opts.params may be undefined
-	
-	        var iframe;
-	
-	        // sanity check, are url and relay_url the same origin?
-	        var origin = opts.origin || extractOrigin(opts.url);
-	        if (origin !== extractOrigin(opts.relay_url)) {
-	          return setTimeout(function() {
-	            cb('invalid arguments: origin of url and relay_url must match');
-	          }, 0);
-	        }
-	
-	        var messageTarget;
-	
-	        if (isIE) {
-	          // first we need to add a "relay" iframe to the document that's served
-	          // from the target domain.  We can postmessage into a iframe, but not a
-	          // window
-	          iframe = document.createElement("iframe");
-	          // iframe.setAttribute('name', framename);
-	          iframe.setAttribute('src', opts.relay_url);
-	          iframe.style.display = "none";
-	          iframe.setAttribute('name', RELAY_FRAME_NAME);
-	          document.body.appendChild(iframe);
-	          messageTarget = iframe.contentWindow;
-	        }
-	
-	        var w = opts.popup || window.open(opts.url, opts.window_name, opts.window_features);
-	        if (opts.popup) {
-	          w.location.href = opts.url;
-	        }
-	
-	        if (!messageTarget) messageTarget = w;
-	
-	        // lets listen in case the window blows up before telling us
-	        var closeInterval = setInterval(function() {
-	          if (w && w.closed) {
-	            cleanup();
-	            if (cb) {
-	              cb('User closed the popup window');
-	              cb = null;
-	            }
-	          }
-	        }, 500);
-	
-	        var req = JSON.stringify({a: 'request', d: opts.params});
-	
-	        // cleanup on unload
-	        function cleanup() {
-	          if (iframe) document.body.removeChild(iframe);
-	          iframe = undefined;
-	          if (closeInterval) closeInterval = clearInterval(closeInterval);
-	          removeListener(window, 'message', onMessage);
-	          removeListener(window, 'unload', cleanup);
-	          if (w) {
-	            try {
-	              w.close();
-	            } catch (securityViolation) {
-	              // This happens in Opera 12 sometimes
-	              // see https://github.com/mozilla/browserid/issues/1844
-	              messageTarget.postMessage(CLOSE_CMD, origin);
-	            }
-	          }
-	          w = messageTarget = undefined;
-	        }
-	
-	        addListener(window, 'unload', cleanup);
-	
-	        function onMessage(e) {
-	          if (e.origin !== origin) { return; }
-	          try {
-	            var d = JSON.parse(e.data);
-	          } catch(err) {
-	            if (cb) {
-	              cb(err);
-	            } else {
-	              throw err;
-	            }
-	          }
-	
-	          if (d.a === 'ready') {
-	            messageTarget.postMessage(req, origin);
-	          } else if (d.a === 'error') {
-	            cleanup();
-	            if (cb) {
-	              cb(d.d);
-	              cb = null;
-	            }
-	          } else if (d.a === 'response') {
-	            cleanup();
-	            if (cb) {
-	              cb(null, d.d);
-	              cb = null;
-	            }
-	          }
-	        }
-	
-	        addListener(window, 'message', onMessage);
-	
-	        return {
-	          close: cleanup,
-	          focus: function() {
-	            if (w) {
-	              try {
-	                w.focus();
-	              } catch (e) {
-	                // IE7 blows up here, do nothing
-	              }
-	            }
-	          }
-	        };
-	      },
-	      onOpen: function(cb) {
-	        var o = "*";
-	        var msgTarget = isIE ? findRelay() : window.opener;
-	        if (!msgTarget) throw "can't find relay frame";
-	        function doPost(msg) {
-	          msg = JSON.stringify(msg);
-	          if (isIE) msgTarget.doPost(msg, o);
-	          else msgTarget.postMessage(msg, o);
-	        }
-	
-	        function onMessage(e) {
-	          // only one message gets through, but let's make sure it's actually
-	          // the message we're looking for (other code may be using
-	          // postmessage) - we do this by ensuring the payload can
-	          // be parsed, and it's got an 'a' (action) value of 'request'.
-	          var d;
-	          try {
-	            d = JSON.parse(e.data);
-	          } catch(err) { }
-	          if (!d || d.a !== 'request') return;
-	          removeListener(window, 'message', onMessage);
-	          o = e.origin;
-	          if (cb) {
-	            // this setTimeout is critically important for IE8 -
-	            // in ie8 sometimes addListener for 'message' can synchronously
-	            // cause your callback to be invoked.  awesome.
-	            setTimeout(function() {
-	              cb(o, d.d, function(r) {
-	                cb = undefined;
-	                doPost({a: 'response', d: r});
-	              });
-	            }, 0);
-	          }
-	        }
-	
-	        function onDie(e) {
-	          if (e.data === CLOSE_CMD) {
-	            try { window.close(); } catch (o_O) {}
-	          }
-	        }
-	        addListener(isIE ? msgTarget : window, 'message', onMessage);
-	        addListener(isIE ? msgTarget : window, 'message', onDie);
-	
-	        // we cannot post to our parent that we're ready before the iframe
-	        // is loaded. (IE specific possible failure)
-	        try {
-	          doPost({a: "ready"});
-	        } catch(e) {
-	          // this code should never be exectued outside IE
-	          addListener(msgTarget, 'load', function(e) {
-	            doPost({a: "ready"});
-	          });
-	        }
-	
-	        // if window is unloaded and the client hasn't called cb, it's an error
-	        var onUnload = function() {
-	          try {
-	            // IE8 doesn't like this...
-	            removeListener(isIE ? msgTarget : window, 'message', onDie);
-	          } catch (ohWell) { }
-	          if (cb) doPost({ a: 'error', d: 'client closed window' });
-	          cb = undefined;
-	          // explicitly close the window, in case the client is trying to reload or nav
-	          try { window.close(); } catch (e) { }
-	        };
-	        addListener(window, 'unload', onUnload);
-	        return {
-	          detach: function() {
-	            removeListener(window, 'unload', onUnload);
-	          }
-	        };
-	      }
-	    };
-	  } else {
-	    return {
-	      open: function(url, winopts, arg, cb) {
-	        setTimeout(function() { cb("unsupported browser"); }, 0);
-	      },
-	      onOpen: function(cb) {
-	        setTimeout(function() { cb("unsupported browser"); }, 0);
-	      }
-	    };
-	  }
-	})();
-	
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = WinChan;
-	}
-
-
-/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
 	var RequestBuilder = __webpack_require__(10);
 	var qs = __webpack_require__(5);
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var assert = __webpack_require__(4);
 	var responseHandler = __webpack_require__(6);
 	var parametersWhitelist = __webpack_require__(45);
@@ -3137,7 +2883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var base64 = __webpack_require__(15);
+	var base64 = __webpack_require__(16);
 	
 	function padding(str) {
 	  var mod = str.length % 4;
@@ -3212,7 +2958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var windowHelper = __webpack_require__(3);
+	var windowHelper = __webpack_require__(1);
 	
 	function IframeHandler(options) {
 	  this.url = options.url;
@@ -3243,7 +2989,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  this.iframe = _window.document.createElement('iframe');
 	  this.iframe.style.display = 'none';
-	  this.iframe.src = this.url;
 	
 	  // Workaround to avoid using bind that does not work in IE8
 	  this.proxyEventListener = function(e) {
@@ -3264,6 +3009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.eventSourceObject.addEventListener(this.eventListenerType, this.proxyEventListener, false);
 	
 	  _window.document.body.appendChild(this.iframe);
+	  this.iframe.src = this.url;
 	
 	  this.timeoutHandle = setTimeout(function() {
 	    _this.timeoutHandler();
@@ -3309,69 +3055,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var random = __webpack_require__(48);
-	var storage = __webpack_require__(49);
-	
-	var DEFAULT_NAMESPACE = 'com.auth0.auth.';
-	
-	function TransactionManager(options) {
-	  options = options || {};
-	  this.namespace = options.namespace || DEFAULT_NAMESPACE;
-	  this.keyLength = options.keyLength || 32;
-	}
-	
-	TransactionManager.prototype.process = function(options) {
-	  var transaction;
-	
-	  if (options.responseType.indexOf('code') !== -1) {
-	    return options;
-	  }
-	
-	  if (options.responseType.indexOf('id_token') !== -1 && !!options.nonce) {
-	    return options;
-	  }
-	
-	  transaction = this.generateTransaction(options.appState, options.state, options.nonce);
-	
-	  options.state = transaction.state;
-	
-	  if (options.responseType.indexOf('id_token') !== -1) {
-	    options.nonce = transaction.nonce;
-	  }
-	
-	  return options;
-	};
-	
-	TransactionManager.prototype.generateTransaction = function(appState, state, nonce) {
-	  var transaction = state || random.randomString(this.keyLength);
-	  nonce = nonce || random.randomString(this.keyLength);
-	
-	  storage.setItem(this.namespace + transaction, {
-	    nonce: nonce,
-	    appState: appState
-	  });
-	
-	  return {
-	    state: transaction,
-	    nonce: nonce
-	  };
-	};
-	
-	TransactionManager.prototype.getStoredTransaction = function(transaction) {
-	  var transactionData;
-	
-	  transactionData = storage.getItem(this.namespace + transaction);
-	  storage.removeItem(this.namespace + transaction);
-	  return transactionData;
-	};
-	
-	module.exports = TransactionManager;
-
-
-/***/ },
-/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3540,7 +3223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function (root, factory) {
@@ -4305,13 +3988,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}));
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;(function (root, factory) {
 		if (true) {
 			// CommonJS
-			module.exports = exports = factory(__webpack_require__(25));
+			module.exports = exports = factory(__webpack_require__(24));
 		}
 		else if (typeof define === "function" && define.amd) {
 			// AMD
@@ -4509,7 +4192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}));
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports) {
 
 	function DummyCache() {}
@@ -4529,7 +4212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports) {
 
 	function ConfigurationError(message) {
@@ -4551,12 +4234,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
-	var base64 = __webpack_require__(16);
-	var request = __webpack_require__(17);
+	var urljoin = __webpack_require__(3);
+	var base64 = __webpack_require__(17);
+	var request = __webpack_require__(18);
 	
 	function process(jwks) {
 	  var modulus = base64.decodeToHEX(jwks.n);
@@ -4601,7 +4284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4610,8 +4293,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	http://www-cs-students.stanford.edu/~tjw/jsbn/LICENSE
 	*/
 	
-	var BigInteger = __webpack_require__(32).BigInteger;
-	var SHA256 = __webpack_require__(26);
+	var BigInteger = __webpack_require__(31).BigInteger;
+	var SHA256 = __webpack_require__(25);
 	
 	var DigestInfoHead = {
 	  sha1: '3021300906052b0e03021a05000414',
@@ -4684,14 +4367,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var RSAVerifier = __webpack_require__(30);
-	var base64 = __webpack_require__(16);
-	var jwks = __webpack_require__(29);
-	var error = __webpack_require__(28);
-	var DummyCache = __webpack_require__(27);
+	var RSAVerifier = __webpack_require__(29);
+	var base64 = __webpack_require__(17);
+	var jwks = __webpack_require__(28);
+	var error = __webpack_require__(27);
+	var DummyCache = __webpack_require__(26);
 	var supportedAlgs = ['RS256'];
 	
 	/**
@@ -4938,7 +4621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function(){
@@ -6301,7 +5984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6322,7 +6005,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6919,7 +6602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6927,7 +6610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Module dependencies.
 	 */
 	
-	var utils = __webpack_require__(37);
+	var utils = __webpack_require__(36);
 	
 	/**
 	 * Expose `ResponseBase`.
@@ -7058,7 +6741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports) {
 
 	var ERROR_CODES = [
@@ -7085,7 +6768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports) {
 
 	
@@ -7158,15 +6841,334 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
+/* 37 */
+/***/ function(module, exports) {
+
+	var WinChan = (function() {
+	  var RELAY_FRAME_NAME = "__winchan_relay_frame";
+	  var CLOSE_CMD = "die";
+	
+	  // a portable addListener implementation
+	  function addListener(w, event, cb) {
+	    if(w.attachEvent) w.attachEvent('on' + event, cb);
+	    else if (w.addEventListener) w.addEventListener(event, cb, false);
+	  }
+	
+	  // a portable removeListener implementation
+	  function removeListener(w, event, cb) {
+	    if(w.detachEvent) w.detachEvent('on' + event, cb);
+	    else if (w.removeEventListener) w.removeEventListener(event, cb, false);
+	  }
+	
+	
+	  // checking for IE8 or above
+	  function isInternetExplorer() {
+	    if (typeof navigator === 'undefined') {
+	      return false;
+	    }
+	
+	    var rv = -1; // Return value assumes failure.
+	    var ua = navigator.userAgent;
+	    if (navigator.appName === 'Microsoft Internet Explorer') {
+	      var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+	      if (re.exec(ua) != null)
+	        rv = parseFloat(RegExp.$1);
+	    }
+	    // IE > 11
+	    else if (ua.indexOf("Trident") > -1) {
+	      var re = new RegExp("rv:([0-9]{2,2}[\.0-9]{0,})");
+	      if (re.exec(ua) !== null) {
+	        rv = parseFloat(RegExp.$1);
+	      }
+	    }
+	
+	    return rv >= 8;
+	  }
+	
+	  // checking Mobile Firefox (Fennec)
+	  function isFennec() {
+	    try {
+	      // We must check for both XUL and Java versions of Fennec.  Both have
+	      // distinct UA strings.
+	      var userAgent = navigator.userAgent;
+	      return (userAgent.indexOf('Fennec/') != -1) ||  // XUL
+	             (userAgent.indexOf('Firefox/') != -1 && userAgent.indexOf('Android') != -1);   // Java
+	    } catch(e) {}
+	    return false;
+	  }
+	
+	  // feature checking to see if this platform is supported at all
+	  function isSupported() {
+	    return (typeof window !== 'undefined' && window.JSON && window.JSON.stringify &&
+	            window.JSON.parse && window.postMessage);
+	  }
+	
+	  // given a URL, extract the origin. Taken from: https://github.com/firebase/firebase-simple-login/blob/d2cb95b9f812d8488bdbfba51c3a7c153ba1a074/js/src/simple-login/transports/WinChan.js#L25-L30
+	  function extractOrigin(url) {
+	    if (!/^https?:\/\//.test(url)) url = window.location.href;
+	    var m = /^(https?:\/\/[\-_a-zA-Z\.0-9:]+)/.exec(url);
+	    if (m) return m[1];
+	    return url;
+	  }
+	
+	  // find the relay iframe in the opener
+	  function findRelay() {
+	    var loc = window.location;
+	    var frames = window.opener.frames;
+	    for (var i = frames.length - 1; i >= 0; i--) {
+	      try {
+	        if (frames[i].location.protocol === window.location.protocol &&
+	            frames[i].location.host === window.location.host &&
+	            frames[i].name === RELAY_FRAME_NAME)
+	        {
+	          return frames[i];
+	        }
+	      } catch(e) { }
+	    }
+	    return;
+	  }
+	
+	  var isIE = isInternetExplorer();
+	
+	  if (isSupported()) {
+	    /*  General flow:
+	     *                  0. user clicks
+	     *  (IE SPECIFIC)   1. caller adds relay iframe (served from trusted domain) to DOM
+	     *                  2. caller opens window (with content from trusted domain)
+	     *                  3. window on opening adds a listener to 'message'
+	     *  (IE SPECIFIC)   4. window on opening finds iframe
+	     *                  5. window checks if iframe is "loaded" - has a 'doPost' function yet
+	     *  (IE SPECIFIC5)  5a. if iframe.doPost exists, window uses it to send ready event to caller
+	     *  (IE SPECIFIC5)  5b. if iframe.doPost doesn't exist, window waits for frame ready
+	     *  (IE SPECIFIC5)  5bi. once ready, window calls iframe.doPost to send ready event
+	     *                  6. caller upon reciept of 'ready', sends args
+	     */
+	    return {
+	      open: function(opts, cb) {
+	        if (!cb) throw "missing required callback argument";
+	
+	        // test required options
+	        var err;
+	        if (!opts.url) err = "missing required 'url' parameter";
+	        if (!opts.relay_url) err = "missing required 'relay_url' parameter";
+	        if (err) setTimeout(function() { cb(err); }, 0);
+	
+	        // supply default options
+	        if (!opts.window_name) opts.window_name = null;
+	        if (!opts.window_features || isFennec()) opts.window_features = undefined;
+	
+	        // opts.params may be undefined
+	
+	        var iframe;
+	
+	        // sanity check, are url and relay_url the same origin?
+	        var origin = opts.origin || extractOrigin(opts.url);
+	        if (origin !== extractOrigin(opts.relay_url)) {
+	          return setTimeout(function() {
+	            cb('invalid arguments: origin of url and relay_url must match');
+	          }, 0);
+	        }
+	
+	        var messageTarget;
+	
+	        if (isIE) {
+	          // first we need to add a "relay" iframe to the document that's served
+	          // from the target domain.  We can postmessage into a iframe, but not a
+	          // window
+	          iframe = document.createElement("iframe");
+	          // iframe.setAttribute('name', framename);
+	          iframe.setAttribute('src', opts.relay_url);
+	          iframe.style.display = "none";
+	          iframe.setAttribute('name', RELAY_FRAME_NAME);
+	          document.body.appendChild(iframe);
+	          messageTarget = iframe.contentWindow;
+	        }
+	
+	        var w = opts.popup || window.open(opts.url, opts.window_name, opts.window_features);
+	        if (opts.popup) {
+	          w.location.href = opts.url;
+	        }
+	
+	        if (!messageTarget) messageTarget = w;
+	
+	        // lets listen in case the window blows up before telling us
+	        var closeInterval = setInterval(function() {
+	          if (w && w.closed) {
+	            cleanup();
+	            if (cb) {
+	              cb('User closed the popup window');
+	              cb = null;
+	            }
+	          }
+	        }, 500);
+	
+	        var req = JSON.stringify({a: 'request', d: opts.params});
+	
+	        // cleanup on unload
+	        function cleanup() {
+	          if (iframe) document.body.removeChild(iframe);
+	          iframe = undefined;
+	          if (closeInterval) closeInterval = clearInterval(closeInterval);
+	          removeListener(window, 'message', onMessage);
+	          removeListener(window, 'unload', cleanup);
+	          if (w) {
+	            try {
+	              w.close();
+	            } catch (securityViolation) {
+	              // This happens in Opera 12 sometimes
+	              // see https://github.com/mozilla/browserid/issues/1844
+	              messageTarget.postMessage(CLOSE_CMD, origin);
+	            }
+	          }
+	          w = messageTarget = undefined;
+	        }
+	
+	        addListener(window, 'unload', cleanup);
+	
+	        function onMessage(e) {
+	          if (e.origin !== origin) { return; }
+	          try {
+	            var d = JSON.parse(e.data);
+	          } catch(err) {
+	            if (cb) {
+	              cb(err);
+	            } else {
+	              throw err;
+	            }
+	          }
+	
+	          if (d.a === 'ready') {
+	            messageTarget.postMessage(req, origin);
+	          } else if (d.a === 'error') {
+	            cleanup();
+	            if (cb) {
+	              cb(d.d);
+	              cb = null;
+	            }
+	          } else if (d.a === 'response') {
+	            cleanup();
+	            if (cb) {
+	              cb(null, d.d);
+	              cb = null;
+	            }
+	          }
+	        }
+	
+	        addListener(window, 'message', onMessage);
+	
+	        return {
+	          close: cleanup,
+	          focus: function() {
+	            if (w) {
+	              try {
+	                w.focus();
+	              } catch (e) {
+	                // IE7 blows up here, do nothing
+	              }
+	            }
+	          }
+	        };
+	      },
+	      onOpen: function(cb) {
+	        var o = "*";
+	        var msgTarget = isIE ? findRelay() : window.opener;
+	        if (!msgTarget) throw "can't find relay frame";
+	        function doPost(msg) {
+	          msg = JSON.stringify(msg);
+	          if (isIE) msgTarget.doPost(msg, o);
+	          else msgTarget.postMessage(msg, o);
+	        }
+	
+	        function onMessage(e) {
+	          // only one message gets through, but let's make sure it's actually
+	          // the message we're looking for (other code may be using
+	          // postmessage) - we do this by ensuring the payload can
+	          // be parsed, and it's got an 'a' (action) value of 'request'.
+	          var d;
+	          try {
+	            d = JSON.parse(e.data);
+	          } catch(err) { }
+	          if (!d || d.a !== 'request') return;
+	          removeListener(window, 'message', onMessage);
+	          o = e.origin;
+	          if (cb) {
+	            // this setTimeout is critically important for IE8 -
+	            // in ie8 sometimes addListener for 'message' can synchronously
+	            // cause your callback to be invoked.  awesome.
+	            setTimeout(function() {
+	              cb(o, d.d, function(r) {
+	                cb = undefined;
+	                doPost({a: 'response', d: r});
+	              });
+	            }, 0);
+	          }
+	        }
+	
+	        function onDie(e) {
+	          if (e.data === CLOSE_CMD) {
+	            try { window.close(); } catch (o_O) {}
+	          }
+	        }
+	        addListener(isIE ? msgTarget : window, 'message', onMessage);
+	        addListener(isIE ? msgTarget : window, 'message', onDie);
+	
+	        // we cannot post to our parent that we're ready before the iframe
+	        // is loaded. (IE specific possible failure)
+	        try {
+	          doPost({a: "ready"});
+	        } catch(e) {
+	          // this code should never be exectued outside IE
+	          addListener(msgTarget, 'load', function(e) {
+	            doPost({a: "ready"});
+	          });
+	        }
+	
+	        // if window is unloaded and the client hasn't called cb, it's an error
+	        var onUnload = function() {
+	          try {
+	            // IE8 doesn't like this...
+	            removeListener(isIE ? msgTarget : window, 'message', onDie);
+	          } catch (ohWell) { }
+	          if (cb) doPost({ a: 'error', d: 'client closed window' });
+	          cb = undefined;
+	          // explicitly close the window, in case the client is trying to reload or nav
+	          try { window.close(); } catch (e) { }
+	        };
+	        addListener(window, 'unload', onUnload);
+	        return {
+	          detach: function() {
+	            removeListener(window, 'unload', onUnload);
+	          }
+	        };
+	      }
+	    };
+	  } else {
+	    return {
+	      open: function(url, winopts, arg, cb) {
+	        setTimeout(function() { cb("unsupported browser"); }, 0);
+	      },
+	      onOpen: function(cb) {
+	        setTimeout(function() { cb("unsupported browser"); }, 0);
+	      }
+	    };
+	  }
+	})();
+	
+	if (typeof module !== 'undefined' && module.exports) {
+	  module.exports = WinChan;
+	}
+
+
+/***/ },
 /* 38 */,
 /* 39 */,
 /* 40 */,
 /* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var assert = __webpack_require__(4);
 	var responseHandler = __webpack_require__(6);
 	
@@ -7273,9 +7275,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var assert = __webpack_require__(4);
 	var qs = __webpack_require__(5);
 	var responseHandler = __webpack_require__(6);
@@ -7467,7 +7469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var windowHandler = __webpack_require__(3);
+	var windowHandler = __webpack_require__(1);
 	var base64Url = __webpack_require__(20);
 	
 	function create(name, value, days) {
@@ -7581,7 +7583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	
 	var tokenParams = [
 	  // auth0
@@ -7610,6 +7612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'auth0Client',
 	  'owp',
 	  'device',
+	  'realm',
 	
 	  'protocol',
 	  '_csrf',
@@ -7717,10 +7720,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* eslint-disable no-restricted-syntax */
 	/* eslint-disable guard-for-in */
-	var WinChan = __webpack_require__(18);
+	var WinChan = __webpack_require__(37);
 	
-	var windowHandler = __webpack_require__(3);
-	var objectHelper = __webpack_require__(1);
+	var windowHandler = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var qs = __webpack_require__(5);
 	
 	function PopupHandler() {
@@ -7808,7 +7811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var windowHelper = __webpack_require__(3);
+	var windowHelper = __webpack_require__(1);
 	
 	function randomString(length) {
 	  // eslint-disable-next-line
@@ -7911,7 +7914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var windowHandler = __webpack_require__(3);
+	var windowHandler = __webpack_require__(1);
 	var DummyStorage = __webpack_require__(51);
 	var CookieStorage = __webpack_require__(50);
 	var Warn = __webpack_require__(11);
@@ -8005,7 +8008,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
 	var RequestBuilder = __webpack_require__(10);
 	var assert = __webpack_require__(4);
@@ -8133,10 +8136,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
-	var windowHelper = __webpack_require__(3);
-	var objectHelper = __webpack_require__(1);
+	var windowHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var RequestBuilder = __webpack_require__(10);
 	
 	function CrossOriginAuthentication(webAuth, options) {
@@ -8261,15 +8264,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var IdTokenVerifier = __webpack_require__(31);
+	var IdTokenVerifier = __webpack_require__(30);
 	
 	var assert = __webpack_require__(4);
 	var error = __webpack_require__(21);
 	var qs = __webpack_require__(5);
 	var PluginHandler = __webpack_require__(46);
-	var windowHelper = __webpack_require__(3);
-	var objectHelper = __webpack_require__(1);
-	var TransactionManager = __webpack_require__(23);
+	var windowHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
+	var TransactionManager = __webpack_require__(15);
 	var Authentication = __webpack_require__(19);
 	var Redirect = __webpack_require__(59);
 	var Popup = __webpack_require__(58);
@@ -8285,7 +8288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} options.clientID your Auth0 client identifier obtained when creating the client in the Auth0 Dashboard
 	 * @param {String} [options.redirectUri] url that the Auth0 will redirect after Auth with the Authorization Response
 	 * @param {String} [options.responseType] type of the response used by OAuth 2.0 flow. It can be any space separated list of the values `code`, `token`, `id_token`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0}
-	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
+	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. The `query` value is only supported when `responseType` is `code`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
 	 * @param {String} [options.scope] scopes to be requested during Auth. e.g. `openid email`
 	 * @param {String} [options.audience] identifier of the resource server who will consume the access token issued after Auth
 	 * @param {Array} [options.plugins]
@@ -8305,6 +8308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      redirectUri: { optional: true, type: 'string', message: 'redirectUri is not valid' },
 	      scope: { optional: true, type: 'string', message: 'scope is not valid' },
 	      audience: { optional: true, type: 'string', message: 'audience is not valid' },
+	      popupOrigin: { optional: true, type: 'string', message: 'popupOrigin is not valid' },
 	      leeway: { optional: true, type: 'number', message: 'leeway is not valid' },
 	      plugins: { optional: true, type: 'array', message: 'plugins is not valid' },
 	      _disableDeprecationWarnings: {
@@ -8382,15 +8386,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} options.hash the url hash. If not provided it will extract from window.location.hash
 	 * @param {String} [options.state] value originally sent in `state` parameter to {@link authorize} to mitigate XSRF
 	 * @param {String} [options.nonce] value originally sent in `nonce` parameter to {@link authorize} to prevent replay attacks
-	 * @param {String} [options._idTokenVerification] makes parseHash perform or skip `id_token` verification. We **strongly** recommend validating the `id_token` yourself if you disable the verification.
 	 * @param {authorizeCallback} cb
 	 */
 	WebAuth.prototype.parseHash = function(options, cb) {
 	  var parsedQs;
 	  var err;
-	  var state;
-	  var transaction;
-	  var transactionNonce;
 	
 	  if (!cb && typeof options === 'function') {
 	    cb = options;
@@ -8398,8 +8398,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } else {
 	    options = options || {};
 	  }
-	
-	  options._idTokenVerification = !(options._idTokenVerification === false);
 	
 	  var _window = windowHelper.getWindow();
 	
@@ -8425,46 +8423,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	  ) {
 	    return cb(null, null);
 	  }
-	
-	  state = parsedQs.state || options.state;
-	
-	  transaction = this.transactionManager.getStoredTransaction(state);
-	  transactionNonce = options.nonce || (transaction && transaction.nonce) || null;
-	
-	  var applicationStatus = (transaction && transaction.appStatus) || null;
-	  if (parsedQs.id_token && options._idTokenVerification) {
-	    return this.validateToken(parsedQs.id_token, transactionNonce, function(
-	      validationError,
-	      payload
-	    ) {
-	      if (validationError) {
-	        return cb(validationError);
-	      }
-	      return cb(null, buildParseHashResponse(parsedQs, applicationStatus, payload));
-	    });
-	  }
-	
-	  if (parsedQs.id_token) {
-	    var verifier = new IdTokenVerifier({
-	      issuer: this.baseOptions.token_issuer,
-	      audience: this.baseOptions.clientID,
-	      leeway: this.baseOptions.leeway || 0,
-	      __disableExpirationCheck: this.baseOptions.__disableExpirationCheck
-	    });
-	
-	    var decodedToken = verifier.decode(parsedQs.id_token);
-	    cb(null, buildParseHashResponse(parsedQs, applicationStatus, decodedToken.payload));
-	  } else {
-	    cb(null, buildParseHashResponse(parsedQs, applicationStatus, null));
-	  }
+	  return this.validateAuthenticationResponse(options, parsedQs, cb);
 	};
 	
-	function buildParseHashResponse(qsParams, appStatus, token) {
+	/**
+	 * Validates an Auth response from a Auth flow started with {@link authorize}
+	 *
+	 * Only validates id_tokens signed by Auth0 using the RS256 algorithm using the public key exposed
+	 * by the `/.well-known/jwks.json` endpoint of your account.
+	 * Tokens signed with other algorithms, e.g. HS256 will not be accepted.
+	 *
+	 * @method validateAuthenticationResponse
+	 * @param {Object} options
+	 * @param {String} options.hash the url hash. If not provided it will extract from window.location.hash
+	 * @param {String} [options.state] value originally sent in `state` parameter to {@link authorize} to mitigate XSRF
+	 * @param {String} [options.nonce] value originally sent in `nonce` parameter to {@link authorize} to prevent replay attacks
+	 * @param {authorizeCallback} cb
+	 */
+	WebAuth.prototype.validateAuthenticationResponse = function(options, parsedHash, cb) {
+	  var _this = this;
+	  var state = parsedHash.state;
+	  var transaction = this.transactionManager.getStoredTransaction(state);
+	  var transactionState = options.state || (transaction && transaction.state) || null;
+	  var transactionStateMatchesState = transactionState === state;
+	  if (!state || !transactionStateMatchesState) {
+	    return cb({
+	      error: 'invalid_token',
+	      errorDescription: '`state` does not match.'
+	    });
+	  }
+	  var transactionNonce = options.nonce || (transaction && transaction.nonce) || null;
+	
+	  var appState = options.state || (transaction && transaction.appState) || null;
+	
+	  if (!parsedHash.id_token) {
+	    return cb(null, buildParseHashResponse(parsedHash, appState, null));
+	  }
+	  return this.validateToken(parsedHash.id_token, transactionNonce, function(
+	    validationError,
+	    payload
+	  ) {
+	    if (!validationError) {
+	      return cb(null, buildParseHashResponse(parsedHash, appState, payload));
+	    }
+	    if (validationError.error !== 'invalid_token') {
+	      return cb(validationError);
+	    }
+	    // if it's an invalid_token error, decode the token
+	    var decodedToken = new IdTokenVerifier().decode(parsedHash.id_token);
+	    // if the alg is not HS256, return the raw error
+	    if (decodedToken.header.alg !== 'HS256') {
+	      return cb(validationError);
+	    }
+	    // if the alg is HS256, use the /userinfo endpoint to build the payload
+	    return _this.client.userInfo(parsedHash.access_token, function(errUserInfo, profile) {
+	      // if the /userinfo request fails, use the validationError instead
+	      if (errUserInfo) {
+	        return cb(validationError);
+	      }
+	      return cb(null, buildParseHashResponse(parsedHash, appState, profile));
+	    });
+	  });
+	};
+	
+	function buildParseHashResponse(qsParams, appState, token) {
 	  return {
 	    accessToken: qsParams.access_token || null,
 	    idToken: qsParams.id_token || null,
 	    idTokenPayload: token || null,
-	    appStatus: appStatus || null,
+	    appState: appState || null,
 	    refreshToken: qsParams.refresh_token || null,
 	    state: qsParams.state || null,
 	    expiresIn: qsParams.expires_in ? parseInt(qsParams.expires_in, 10) : null,
@@ -8516,12 +8543,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} [options.clientID] your Auth0 client identifier obtained when creating the client in the Auth0 Dashboard
 	 * @param {String} [options.redirectUri] url that the Auth0 will redirect after Auth with the Authorization Response
 	 * @param {String} [options.responseType] type of the response used by OAuth 2.0 flow. It can be any space separated list of the values `code`, `token`, `id_token`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0}
-	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
+	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. The `query` value is only supported when `responseType` is `code`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
 	 * @param {String} [options.state] value used to mitigate XSRF attacks. {@link https://auth0.com/docs/protocols/oauth2/oauth-state}
 	 * @param {String} [options.nonce] value used to mitigate replay attacks when using Implicit Grant. {@link https://auth0.com/docs/api-auth/tutorials/nonce}
 	 * @param {String} [options.scope] scopes to be requested during Auth. e.g. `openid email`
 	 * @param {String} [options.audience] identifier of the resource server who will consume the access token issued after Auth
 	 * @param {String} [options.postMessageDataType] identifier data type to look for in postMessage event data, where events are initiated from silent callback urls, before accepting a message event is the event expected. A value of false means any postMessage event will trigger a callback.
+	 * @param {String} [options.postMessageOrigin] origin of redirectUri to expect postMessage response from.  Defaults to the origin of the receiving window. Only used if usePostMessage is truthy.
 	 * @param {String} [options.timeout] value in milliseconds used to timeout when the `/authorize` call is failing as part of the silent authentication with postmessage enabled due to a configuration.
 	 * @see {@link https://auth0.com/docs/api/authentication#authorize-client}
 	 */
@@ -8529,6 +8557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var handler;
 	  var usePostMessage = !!options.usePostMessage;
 	  var postMessageDataType = options.postMessageDataType || false;
+	  var postMessageOrigin = options.postMessageOrigin || windowHelper.getWindow().origin;
 	  var timeout = options.timeout;
 	  var _this = this;
 	
@@ -8548,20 +8577,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  params.responseType = params.responseType || 'token';
 	  params.responseMode = params.responseMode || 'fragment';
-	  if (!options.nonce) {
-	    params = this.transactionManager.process(params);
-	  }
+	  params = this.transactionManager.process(params);
 	
 	  assert.check(params, { type: 'object', message: 'options parameter is not valid' });
 	  assert.check(cb, { type: 'function', message: 'cb parameter is not valid' });
 	
 	  params.prompt = 'none';
 	
-	  params = objectHelper.blacklist(params, ['usePostMessage', 'tenant', 'postMessageDataType']);
+	  params = objectHelper.blacklist(params, [
+	    'usePostMessage',
+	    'tenant',
+	    'postMessageDataType',
+	    'postMessageOrigin'
+	  ]);
 	
 	  handler = SilentAuthenticationHandler.create({
 	    authenticationUrl: this.client.buildAuthorizeUrl(params),
 	    postMessageDataType: postMessageDataType,
+	    postMessageOrigin: postMessageOrigin,
 	    timeout: timeout
 	  });
 	
@@ -8571,10 +8604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // it's here to be backwards compatible and should be removed in the next major version.
 	      return cb(err, hash);
 	    }
-	    var transaction = _this.transactionManager.getStoredTransaction(params.state);
-	    var transactionNonce = options.nonce || (transaction && transaction.nonce) || null;
-	    var transactionState = options.state || (transaction && transaction.state) || null;
-	    _this.parseHash({ hash: hash, nonce: transactionNonce, state: transactionState }, cb);
+	    _this.parseHash({ hash: hash }, cb);
 	  });
 	};
 	
@@ -8616,7 +8646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  assert.check(cb, { type: 'function', message: 'cb parameter is not valid' });
 	
 	  params = objectHelper.blacklist(params, ['usePostMessage', 'tenant', 'postMessageDataType']);
-	  this.webMessageHandler.checkSession(params, cb);
+	  this.webMessageHandler.run(params, cb);
 	};
 	
 	/**
@@ -8690,7 +8720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} [options.clientID] your Auth0 client identifier obtained when creating the client in the Auth0 Dashboard
 	 * @param {String} options.redirectUri url that the Auth0 will redirect after Auth with the Authorization Response
 	 * @param {String} options.responseType type of the response used by OAuth 2.0 flow. It can be any space separated list of the values `code`, `token`, `id_token`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0}
-	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
+	 * @param {String} [options.responseMode] how the Auth response is encoded and redirected back to the client. Supported values are `query`, `fragment` and `form_post`. The `query` value is only supported when `responseType` is `code`. {@link https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes}
 	 * @param {String} [options.state] value used to mitigate XSRF attacks. {@link https://auth0.com/docs/protocols/oauth2/oauth-state}
 	 * @param {String} [options.nonce] value used to mitigate replay attacks when using Implicit Grant. {@link https://auth0.com/docs/api-auth/tutorials/nonce}
 	 * @param {String} [options.scope] scopes to be requested during Auth. e.g. `openid email`
@@ -8764,7 +8794,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Logs in the user with username and password using the cross origin authentication (/co/authenticate) flow. You can use either `username` or `email` to identify the user, but `username` will take precedence over `email`.
-	 * This only works when 3rd party cookies are enabled in the browser. After the /co/authenticate call, you'll have to use the {@link parseHash} function at the `redirectUri` specified in the constructor.
+	 * Some browsers might not be able to successfully authenticate if 3rd party cookies are disabled in your browser. [See here for more information.]{@link https://auth0.com/docs/cross-origin-authentication}.
+	 * After the /co/authenticate call, you'll have to use the {@link parseHash} function at the `redirectUri` specified in the constructor.
 	 *
 	 * @method login
 	 * @param {Object} options options used in the {@link authorize} call after the login_ticket is acquired
@@ -8884,19 +8915,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
-	var WinChan = __webpack_require__(18);
+	var urljoin = __webpack_require__(3);
 	
 	var urlHelper = __webpack_require__(53);
 	var assert = __webpack_require__(4);
 	var responseHandler = __webpack_require__(6);
 	var PopupHandler = __webpack_require__(47);
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
+	var windowHelper = __webpack_require__(1);
 	var Warn = __webpack_require__(11);
-	var TransactionManager = __webpack_require__(23);
+	var TransactionManager = __webpack_require__(15);
 	
 	function Popup(webAuth, options) {
 	  this.baseOptions = options;
+	  this.baseOptions.popupOrigin = options.popupOrigin;
 	  this.client = webAuth.client;
 	  this.webAuth = webAuth;
 	
@@ -8968,10 +9000,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Popup.prototype.callback = function(options) {
 	  var _this = this;
-	  WinChan.onOpen(function(popupOrigin, r, cb) {
-	    _this.webAuth.parseHash(options || {}, function(err, data) {
-	      return cb(err || data);
-	    });
+	  options = options || {};
+	  var originUrl =
+	    options.popupOrigin || this.baseOptions.popupOrigin || windowHelper.getWindow().origin;
+	  _this.webAuth.parseHash(options || {}, function(err, data) {
+	    // {a, d} is WinChan's message format.
+	    // We have to keep the same format because we're opening the popup with WinChan.
+	    var response = { a: 'response', d: data };
+	    if (err) {
+	      response = { a: 'error', d: err };
+	    }
+	    windowHelper.getWindow().opener.postMessage(JSON.stringify(response), originUrl);
 	  });
 	};
 	
@@ -9195,7 +9234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var UsernamePassword = __webpack_require__(61);
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var Warn = __webpack_require__(11);
 	var assert = __webpack_require__(4);
 	
@@ -9295,12 +9334,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var IframeHandler = __webpack_require__(22);
+	var windowHelper = __webpack_require__(1);
 	
 	function SilentAuthenticationHandler(options) {
 	  this.authenticationUrl = options.authenticationUrl;
 	  this.timeout = options.timeout || 60 * 1000;
 	  this.handler = null;
 	  this.postMessageDataType = options.postMessageDataType || false;
+	
+	  // prefer origin from options, fallback to origin from browser, and some browsers (for example MS Edge) don't support origin; fallback to construct origin manually
+	  this.postMessageOrigin =
+	    options.postMessageOrigin ||
+	    windowHelper.getWindow().location.origin ||
+	    windowHelper.getWindow().location.protocol + '//' + windowHelper.getWindow().location.hostname
+	      + (windowHelper.getWindow().location.port ? ':' + windowHelper.getWindow().location.port : '');
 	}
 	
 	SilentAuthenticationHandler.create = function(options) {
@@ -9330,7 +9377,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    isValid: function(eventData) {
 	      switch (eventData.event.type) {
 	        case 'message':
-	          // Default behaviour, return all message events.
+	          // Message must come from the expected origin and iframe window.
+	          if (
+	            eventData.event.origin !== _this.postMessageOrigin ||
+	            eventData.event.source !== _this.handler.iframe.contentWindow
+	          ) {
+	            return false;
+	          }
+	
+	          // Default behaviour, return all message events from the iframe.
 	          if (_this.postMessageDataType === false) {
 	            return true;
 	          }
@@ -9339,7 +9394,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            eventData.event.data.type && eventData.event.data.type === _this.postMessageDataType
 	          );
 	
-	        case 'load': // Fall through to default
+	        case 'load':
+	          if (eventData.sourceObject.contentWindow.location.protocol === 'about:') {
+	            // Chrome is automatically loading the about:blank page, we ignore this.
+	            return false;
+	          }
+	        // Fall through to default
 	        default:
 	          return true;
 	      }
@@ -9368,16 +9428,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var urljoin = __webpack_require__(2);
+	var urljoin = __webpack_require__(3);
 	
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	var RequestBuilder = __webpack_require__(10);
 	var responseHandler = __webpack_require__(6);
-	var windowHelper = __webpack_require__(3);
+	var windowHelper = __webpack_require__(1);
+	var TransactionManager = __webpack_require__(15);
 	
 	function UsernamePassword(options) {
 	  this.baseOptions = options;
 	  this.request = new RequestBuilder(options);
+	  this.transactionManager = new TransactionManager(this.baseOptions.transaction);
 	}
 	
 	UsernamePassword.prototype.login = function(options, cb) {
@@ -9401,6 +9463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      'audience'
 	    ])
 	    .with(options);
+	  body = this.transactionManager.process(body);
 	
 	  body = objectHelper.toSnakeCase(body, ['auth0Client']);
 	
@@ -9427,7 +9490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var IframeHandler = __webpack_require__(22);
-	var objectHelper = __webpack_require__(1);
+	var objectHelper = __webpack_require__(2);
 	
 	function runWebMessageFlow(authorizeUrl, options, callback) {
 	  var handler = new IframeHandler({
@@ -9443,7 +9506,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    timeoutCallback: function() {
-	      callback({ error: 'timeout', error_description: 'Timeout during fetching SSO data' });
+	      callback({
+	        error: 'timeout',
+	        error_description: 'Timeout during executing web_message communication'
+	      });
 	    }
 	  });
 	  handler.init();
@@ -9453,18 +9519,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.webAuth = webAuth;
 	}
 	
-	WebMessageHandler.prototype.checkSession = function(options, cb) {
+	WebMessageHandler.prototype.run = function(options, cb) {
+	  var _this = this;
 	  options.responseMode = 'web_message';
 	  options.prompt = 'none';
 	  runWebMessageFlow(this.webAuth.client.buildAuthorizeUrl(options), options, function(
 	    err,
 	    eventData
 	  ) {
-	    var error = err || eventData.event.data.response.error;
+	    var error = err;
+	    if (!err && eventData.event.data.response.error) {
+	      error = objectHelper.pick(eventData.event.data.response, ['error', 'error_description']);
+	    }
 	    if (error) {
 	      return cb(error);
 	    }
-	    cb(null, objectHelper.toCamelCase(eventData.event.data.response));
+	    var parsedHash = eventData.event.data.response;
+	    _this.webAuth.validateAuthenticationResponse(options, parsedHash, cb);
 	  });
 	};
 	

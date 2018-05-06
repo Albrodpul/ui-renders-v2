@@ -7,12 +7,12 @@
     "test"
   ],
   "homepage": "https://github.com/auth0/auth0.js",
-  "version": "8.10.1",
-  "_release": "8.10.1",
+  "version": "8.12.3",
+  "_release": "8.12.3",
   "_resolution": {
     "type": "version",
-    "tag": "v8.10.1",
-    "commit": "c8047b0a03ffd06fe53d07386c7121a161543f9e"
+    "tag": "v8.12.3",
+    "commit": "64d192a994918e9134d7e46d300381dad299fd20"
   },
   "_source": "https://github.com/auth0/auth0.js.git",
   "_target": "^8.8.0",

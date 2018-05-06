@@ -19,6 +19,10 @@ app.use(bodyParser.urlencoded({
 app.use(helmet()); //improve security
 app.use(fileUpload());
 
+app.options("/*", (req, res, next) => {
+    return res.sendStatus(200);
+  });
+
 // For all GET requests, send back index.html
 app.use("/", routes);
 

@@ -33,7 +33,6 @@
       } else if (profile.sub.match("twitter")) {
         $scope.tProfile = "twitter";
       } else if (profile.sub.match("facebook")) {
-        console.log("?");
         $scope.tProfile = "facebook";
       }
     }
