@@ -20,13 +20,6 @@ router.get('/profile', function (req, res) {
     res.sendFile(path.join(__dirname + '/../public/index.html'));
 });
 
-router.get("/dynamicController", function (req, res) {
-    var model = req.query.model;
-    var view = req.query.model;
-    var ctrl = req.query.ctrl;
-    request(ctrl).pipe(res);
-});
-
 router.get("/render", function (req, res) {
     var ctrl = req.query.ctrl;
     var model = req.query.model;
