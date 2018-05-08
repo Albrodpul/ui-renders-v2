@@ -39,9 +39,9 @@ router.get("/render", function (req, res) {
             res.send("<html ng-app='renderApp'>\n" +
                 "<head>\n" +
                 "<title>ARenderizer</title>\n" +
-                "<link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootstrap.min.css'>\n" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>\n" +
                 "<script type='text/javascript' src='bower_components/jquery/dist/jquery.min.js'></script>\n" +
-                "<script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>\n" +
+                "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>\n" +
                 "<script type='text/javascript' src='bower_components/angular/angular.js'></script>\n" +
                 "<script type='text/javascript' src='bower_components/angular-route/angular-route.js'></script>\n" +
                 "<script type='text/javascript' src='bower_components/angular-ui-router/release/angular-ui-router.js'></script>\n" +
