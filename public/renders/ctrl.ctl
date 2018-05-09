@@ -1,1 +1,0 @@
-$scope.model.id = "ID cambiado";
