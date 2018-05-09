@@ -7,7 +7,7 @@ var helmet = require("helmet");
 var app = express();
 var cors = require("cors");
 var port = (process.env.PORT || 8800);
-var routes = require("./src/routes.js");
+var routes = require("./public/routes.js");
 const fileUpload = require('express-fileupload');
 
 app.use(cors()); // allow Cross-Origin Resource Sharing 
